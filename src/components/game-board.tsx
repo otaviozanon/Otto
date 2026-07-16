@@ -112,20 +112,20 @@ export default function GameBoard() {
         )}
       </AnimatePresence>
 
-      <AnimatePresence>
-        <motion.div
-          key={showTurnBanner ? "banner" : "empty"}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: showTurnBanner ? 1 : 0 }}
-          className="h-7 flex items-center justify-center"
-        >
+      <div className="h-7 flex items-center justify-center">
+        <AnimatePresence>
           {showTurnBanner && (
-            <div className="px-4 py-0.5 rounded-full bg-uno-yellow/10 border border-uno-yellow/20">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="px-4 py-0.5 rounded-full bg-uno-yellow/10 border border-uno-yellow/20"
+            >
               <span className="text-[11px] font-bold text-uno-yellow tracking-[0.2em] uppercase">◆ Seu Turno</span>
-            </div>
+            </motion.div>
           )}
-        </motion.div>
-      </AnimatePresence>
+        </AnimatePresence>
+      </div>
 
       <div className="flex-1 flex flex-col items-center justify-center gap-3 p-4 pt-1 pb-0"> 
         <div className="flex items-center gap-8">
@@ -150,13 +150,13 @@ export default function GameBoard() {
           </div>
 
           <div className="flex flex-col items-center gap-1.5">
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
               <motion.div
                 key={`discard-${gameState.currentCard.type}-${"color" in gameState.currentCard ? gameState.currentCard.color : "wild"}-${"value" in gameState.currentCard ? gameState.currentCard.value : ""}`}
-                initial={{ opacity: 0, scale: 0.5, y: 30 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.1 } }}
-                transition={{ type: "spring", stiffness: 350, damping: 22 }}
+                initial={{ opacity: 0, scale: 0.5, rotate: -20, y: 40 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0, y: 0 }}
+                exit={{ opacity: 0, scale: 0.5, rotate: 20, y: -40 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
               >
                 <Card card={gameState.currentCard} size="lg" />
               </motion.div>
