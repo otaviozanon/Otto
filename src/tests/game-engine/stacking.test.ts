@@ -19,9 +19,9 @@ function makeRoom(overrides: Partial<Room> = {}): Room {
 }
 
 describe("resolveStack", () => {
-  it("draw2: next draws 2", () => { const r = resolveStack(makeRoom({ stackChain: { type: "draw2", count: 1 } })); expect(r.players[1].hand).toHaveLength(2); });
-  it("draw2 x2: draws 4", () => { const r = resolveStack(makeRoom({ stackChain: { type: "draw2", count: 2 } })); expect(r.players[1].hand).toHaveLength(4); });
-  it("wild4 x3: draws 12", () => { const r = resolveStack(makeRoom({ stackChain: { type: "wild4", count: 3 } })); expect(r.players[1].hand).toHaveLength(12); });
+  it("draw2: current player draws 2", () => { const r = resolveStack(makeRoom({ stackChain: { type: "draw2", count: 1 } })); expect(r.players[0].hand).toHaveLength(2); });
+  it("draw2 x2: draws 4", () => { const r = resolveStack(makeRoom({ stackChain: { type: "draw2", count: 2 } })); expect(r.players[0].hand).toHaveLength(4); });
+  it("wild4 x3: draws 12", () => { const r = resolveStack(makeRoom({ stackChain: { type: "wild4", count: 3 } })); expect(r.players[0].hand).toHaveLength(12); });
   it("skip x2: skips 2", () => { const r = resolveStack(makeRoom({ stackChain: { type: "skip", count: 2 } })); expect(r.currentPlayerIndex).toBe(2); });
   it("reverse: inverts", () => { const r = resolveStack(makeRoom({ stackChain: { type: "reverse", count: 1 } })); expect(r.direction).toBe(-1); });
   it("reverse 2p = skip", () => {

@@ -11,7 +11,7 @@ export function resolveStack(room: Room): Room {
 
   if (chain.type === "draw2" || chain.type === "wild4") {
     const drawCount = DRAW_MAP[chain.type] * chain.count;
-    const nextIdx = getNextPlayerIndex(updated);
+    const victimIdx = updated.currentPlayerIndex;
     let currentDraw = updated.drawPile;
 
     for (let i = 0; i < drawCount; i++) {
@@ -24,7 +24,7 @@ export function resolveStack(room: Room): Room {
       updated = {
         ...updated,
         players: updated.players.map((p, idx) =>
-          idx === nextIdx ? { ...p, hand: [...p.hand, card] } : p
+          idx === victimIdx ? { ...p, hand: [...p.hand, card] } : p
         ),
       };
     }

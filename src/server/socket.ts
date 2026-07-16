@@ -134,11 +134,14 @@ export function setupSocket(io: SocketIOServer): void {
       const playerId = getPlayerIdBySocketId(socket.id);
       if (!playerId || !isPlayerTurn(room, playerId)) { socket.emit("error", { message: "Nao e seu turno" }); return; }
       clearRoomTimer(room.id);
-      let currentRoom = room;
       if (room.stackChain) {
-        currentRoom = resolveStack(room);
+        const resolved = resolveStack(room);
+        setRoom(room.id, resolved);
+        startTurnTimer(io, resolved, room.id);
+        sendYourState(io, resolved);
+        return;
       }
-      const updated = passTurn(currentRoom, playerId);
+      const updated = passTurn(room, playerId);
       setRoom(room.id, updated);
       startTurnTimer(io, updated, room.id);
       sendYourState(io, updated);
@@ -215,7 +218,10 @@ function sendYourState(io: SocketIOServer, room: any) {
     const sockId = getSocketId(player.id);
     if (!sockId) continue;
     const isMyTurn = player.id === currentPlayer?.id;
-    const canPlay = isMyTurn && player.hand.some((c: any) => isPlayable(c, topCard, room.currentColor));
+    const canPlay = isMyTurn && player.hand.some((c: any) => {
+      if (room.stackChain && c.type === room.stackChain.type) return true;
+      return isPlayable(c, topCard, room.currentColor);
+    });
     const drawnCard = room.lastDrawnCard[player.id];
     const canStack = isMyTurn && room.stackChain ? player.hand.some((c: any) => c.type === room.stackChain.type) : false;
     const state: PlayerGameState = {
