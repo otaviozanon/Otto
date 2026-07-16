@@ -28,7 +28,7 @@ export default function GameBoard() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [timer, setTimer] = useState(15);
   const [showTurnBanner, setShowTurnBanner] = useState(false);
-  const bannerTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const bannerTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     if (!gameState || !myPlayerId) return;
