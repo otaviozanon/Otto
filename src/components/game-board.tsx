@@ -23,7 +23,7 @@ const STACK_LABELS: Record<string, string> = {
 
 export default function GameBoard() {
   const router = useRouter();
-  const { gameState, gameResult, myPlayerId, error } = useGameStore();
+  const { gameState, gameResult, myPlayerId, error, unoNotif } = useGameStore();
   const room = useGameStore((s) => s.room);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [timer, setTimer] = useState(15);
@@ -32,15 +32,16 @@ export default function GameBoard() {
   const bannerTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
-    if (!gameState) return;
+    if (!gameState || !myPlayerId) return;
     const isMyTurnNow = gameState.currentPlayerId === myPlayerId;
     if (isMyTurnNow && prevTurnRef.current !== myPlayerId) {
       setShowTurnBanner(true);
       clearTimeout(bannerTimerRef.current);
-      bannerTimerRef.current = setTimeout(() => setShowTurnBanner(false), 2500);
-      prevTurnRef.current = myPlayerId as string;
-    } else if (!isMyTurnNow) {
+      bannerTimerRef.current = setTimeout(() => setShowTurnBanner(false), 3000);
+    }
+    if (!isMyTurnNow) {
       setShowTurnBanner(false);
+      clearTimeout(bannerTimerRef.current);
     }
     prevTurnRef.current = gameState.currentPlayerId;
   }, [gameState?.currentPlayerId, myPlayerId]);
@@ -199,6 +200,21 @@ export default function GameBoard() {
 
       <CardHand cards={gameState.hand} selectedIndex={selectedIndex} onSelectCard={setSelectedIndex}
         playableCards={playableCards} disabled={!isMyTurn} cardCount={myCardCount} isDrawing={hasDrawn} />
+
+      <AnimatePresence>
+        {unoNotif && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            className="fixed bottom-[180px] left-1/2 -translate-x-1/2 z-30 pointer-events-none"
+          >
+            <div className="px-4 py-1.5 rounded-full bg-uno-yellow/20 border border-uno-yellow/40 backdrop-blur-sm shadow-lg shadow-uno-yellow/10">
+              <span className="text-xs font-black text-uno-yellow tracking-wider">📢 {unoNotif.playerName} pediu UNO!</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {showTurnBanner && (

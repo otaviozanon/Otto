@@ -291,8 +291,10 @@ export function setupSocket(io: SocketIOServer): void {
       if (!room || room.status !== "playing") return;
       const playerId = getPlayerIdBySocketId(socket.id);
       if (!playerId) return;
+      const player = room.players.find((p) => p.id === playerId);
       const updated = callUno(room, playerId);
       setRoom(room.id, updated);
+      io.to(room.id).emit("game:uno-called", { playerId, playerName: player?.name || "Alguem" });
       sendYourState(io, updated);
     });
 

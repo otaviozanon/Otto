@@ -84,6 +84,19 @@ export default function GameResult() {
               <RotateCcw size={18} />
               {hasVoted ? `Aguardando (${voteCount}/${connectedCount})` : "Jogar Novamente"}
             </motion.button>
+
+            {room && room.playAgainVotes && room.playAgainVotes.length > 0 && (
+              <div className="flex flex-wrap justify-center gap-1.5 pt-1">
+                {room.playAgainVotes.map((voterId) => {
+                  const voter = room.players.find((p) => p.id === voterId);
+                  return voter ? (
+                    <span key={voterId} className="text-[10px] px-2 py-0.5 rounded-full bg-brand/10 text-brand border border-brand/20">
+                      {voter.name} ✓
+                    </span>
+                  ) : null;
+                })}
+              </div>
+            )}
           </motion.div>
         </motion.div>
       )}

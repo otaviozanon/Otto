@@ -9,24 +9,27 @@ interface GameStore {
   gameResult: GameResult | null;
   showColorPicker: boolean;
   error: string | null;
+  unoNotif: { playerName: string } | null;
   setRoom: (room: Room) => void;
   setMyPlayerId: (id: string) => void;
   setGameState: (state: PlayerGameState) => void;
   setGameResult: (result: GameResult) => void;
   setShowColorPicker: (show: boolean) => void;
   setError: (error: string | null) => void;
+  setUnoNotif: (notif: { playerName: string } | null) => void;
   reset: () => void;
 }
 
 export const useGameStore = create<GameStore>((set) => ({
-  room: null, myPlayerId: null, gameState: null, gameResult: null, showColorPicker: false, error: null,
+  room: null, myPlayerId: null, gameState: null, gameResult: null, showColorPicker: false, error: null, unoNotif: null,
   setRoom: (room) => set({ room, error: null }),
   setMyPlayerId: (id) => set({ myPlayerId: id }),
   setGameState: (state) => set({ gameState: state }),
   setGameResult: (result) => set({ gameResult: result }),
   setShowColorPicker: (show) => set({ showColorPicker: show }),
   setError: (error) => set({ error }),
-  reset: () => set({ room: null, myPlayerId: null, gameState: null, gameResult: null, showColorPicker: false, error: null }),
+  setUnoNotif: (notif) => set({ unoNotif: notif }),
+  reset: () => set({ room: null, myPlayerId: null, gameState: null, gameResult: null, showColorPicker: false, error: null, unoNotif: null }),
 }));
 
 let listenersSetup = false;
@@ -43,6 +46,10 @@ export function setupSocketListeners(): void {
   socket.on("player:id", (id: string) => useGameStore.getState().setMyPlayerId(id));
   socket.on("game:your-state", (state: PlayerGameState) => useGameStore.getState().setGameState(state));
   socket.on("game:color-prompt", () => useGameStore.getState().setShowColorPicker(true));
+  socket.on("game:uno-called", (data: { playerId: string; playerName: string }) => {
+    useGameStore.getState().setUnoNotif(data);
+    setTimeout(() => useGameStore.getState().setUnoNotif(null), 3000);
+  });
   socket.on("game:end", (result: GameResult) => useGameStore.getState().setGameResult(result));
 
   let errorTimer: ReturnType<typeof setTimeout>;

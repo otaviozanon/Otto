@@ -45,12 +45,21 @@ export default function RoomPage() {
           <h1 className="text-2xl font-bold text-text-primary">Sala de Espera</h1>
         </div>
 
-        <div className="text-center p-6 rounded-xl bg-surface-raised border border-border">
-          <p className="text-text-muted text-sm mb-2">Codigo da sala</p>
-          <button onClick={() => navigator.clipboard.writeText(room.id).catch(() => {})} className="group flex items-center justify-center gap-3 mx-auto text-4xl font-mono font-bold text-brand hover:text-brand-light tracking-[0.3em] transition-all duration-200 touch-target">
-            {room.id}<Copy size={20} />
-          </button>
-          <p className="text-text-muted text-xs mt-2">Clique para copiar</p>
+        <div className="space-y-3">
+          <div className="text-center p-6 rounded-xl bg-surface-raised border border-border">
+            <p className="text-text-muted text-sm mb-2">Codigo da sala</p>
+            <button onClick={() => navigator.clipboard.writeText(room.id).catch(() => {})} className="group flex items-center justify-center gap-3 mx-auto text-4xl font-mono font-bold text-brand hover:text-brand-light tracking-[0.3em] transition-all duration-200 touch-target">
+              {room.id}<Copy size={20} />
+            </button>
+            <p className="text-text-muted text-xs mt-2">Clique para copiar</p>
+          </div>
+
+          <div className="text-center p-4 rounded-xl bg-surface-raised border border-border">
+            <button onClick={() => navigator.clipboard.writeText(window.location.href).catch(() => {})} className="w-full text-center text-sm text-text-secondary hover:text-brand-light transition-colors">
+              <Copy size={14} className="inline mr-1" />
+              Copiar link da sala
+            </button>
+          </div>
         </div>
 
         <div className="space-y-2">
