@@ -199,6 +199,10 @@ export function setupSocket(io: SocketIOServer): void {
         socket.emit("error", { message: "Nao e seu turno" });
         return;
       }
+      if (requiresColorChoice(room.discardPile[room.discardPile.length - 1])) {
+        socket.emit("error", { message: "Escolha uma cor primeiro" });
+        return;
+      }
       try {
         handlePlay(io, socket, room, playerId, (r, pid) => playCard(r, pid, cardIndex));
       } catch (e: any) {
@@ -212,6 +216,10 @@ export function setupSocket(io: SocketIOServer): void {
       const playerId = getPlayerIdBySocketId(socket.id);
       if (!playerId || !isPlayerTurn(room, playerId)) {
         socket.emit("error", { message: "Nao e seu turno" });
+        return;
+      }
+      if (requiresColorChoice(room.discardPile[room.discardPile.length - 1])) {
+        socket.emit("error", { message: "Escolha uma cor primeiro" });
         return;
       }
       try {
@@ -238,6 +246,10 @@ export function setupSocket(io: SocketIOServer): void {
         socket.emit("error", { message: "Nao e seu turno" });
         return;
       }
+      if (requiresColorChoice(room.discardPile[room.discardPile.length - 1])) {
+        socket.emit("error", { message: "Escolha uma cor primeiro" });
+        return;
+      }
       try {
         handlePlay(io, socket, room, playerId, playDrawnCard);
       } catch (e: any) {
@@ -251,6 +263,10 @@ export function setupSocket(io: SocketIOServer): void {
       const playerId = getPlayerIdBySocketId(socket.id);
       if (!playerId || !isPlayerTurn(room, playerId)) {
         socket.emit("error", { message: "Nao e seu turno" });
+        return;
+      }
+      if (requiresColorChoice(room.discardPile[room.discardPile.length - 1])) {
+        socket.emit("error", { message: "Escolha uma cor primeiro" });
         return;
       }
       clearRoomTimer(room.id);
