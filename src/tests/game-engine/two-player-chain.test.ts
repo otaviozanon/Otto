@@ -40,7 +40,7 @@ describe("2 players: reverse then skip then normal", () => {
       ...g, currentColor: "red", currentPlayerIndex: 0, direction: 1,
       discardPile: [n("red", 5)],
       players: [
-        { ...g.players[0], hand: [s("red"), s("blue"), s("green"), r("red"), s("yellow"), r("blue"), n("red", 3)] },
+        { ...g.players[0], hand: [s("red"), s("red"), s("red"), r("red"), s("red"), r("red"), n("red", 3)] },
         { ...g.players[1], hand: [n("red", 7)] },
       ],
     };
