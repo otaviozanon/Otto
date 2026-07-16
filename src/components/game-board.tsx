@@ -23,7 +23,7 @@ const STACK_LABELS: Record<string, string> = {
 
 export default function GameBoard() {
   const router = useRouter();
-  const { gameState, gameResult, myPlayerId } = useGameStore();
+  const { gameState, gameResult, myPlayerId, error } = useGameStore();
   const room = useGameStore((s) => s.room);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [timer, setTimer] = useState(15);
@@ -171,6 +171,12 @@ export default function GameBoard() {
             </span>
           )}
         </div>
+
+        {error && (
+          <div className="px-4 py-2 rounded-xl bg-accent-danger/10 border border-accent-danger/20 text-accent-danger text-xs font-medium text-center">
+            {error}
+          </div>
+        )}
 
         <ActionButtons canPlay={gameState.canPlay} canStack={gameState.canStack} hasSelectedCard={selectedIndex != null}
           hasDrawn={hasDrawn} drawnPlayable={gameState.drawnCardPlayable} calledUno={gameState.calledUno}
