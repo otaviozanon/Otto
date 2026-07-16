@@ -70,7 +70,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {error && <div className="px-5 py-4 rounded-2xl bg-accent-danger/10 border-2 border-accent-danger/20 text-accent-danger text-sm font-medium text-center animate-slide-up">{error}</div>}
+        {error ? <div className="px-5 py-4 rounded-2xl bg-accent-danger/10 border-2 border-accent-danger/20 text-accent-danger text-sm font-medium text-center animate-slide-up">{error}</div> : null}
       </div>
       <RulesModal />
     </main>

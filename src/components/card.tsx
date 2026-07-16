@@ -1,6 +1,7 @@
 "use client";
+import { memo } from "react";
 import { Card as CardType } from "@/game-engine/types";
-import { Ban, RefreshCw, Sparkles, Zap } from "lucide-react";
+import { Ban, RefreshCw, Sparkles } from "lucide-react";
 
 const COLOR_MAP: Record<string, { bg: string; text: string; border: string }> = {
   red: { bg: "bg-uno-red", text: "text-white", border: "border-uno-red" },
@@ -41,7 +42,7 @@ interface CardProps {
   size?: "sm" | "md" | "lg";
 }
 
-export default function Card({ card, onClick, selected, playable, size = "md" }: CardProps) {
+export default memo(function Card({ card, onClick, selected, playable, size = "md" }: CardProps) {
   const isWild = card.type === "wild" || card.type === "wild4";
   const colors = isWild ? { bg: "bg-gray-900", text: "text-white", border: "border-gray-700" } : COLOR_MAP[card.color!] || COLOR_MAP.red;
   const sizes = { sm: "w-10 h-14 text-xs rounded-md", md: "w-14 h-20 text-sm rounded-lg", lg: "w-20 h-28 text-lg rounded-xl" };

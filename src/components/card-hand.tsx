@@ -1,4 +1,5 @@
 "use client";
+import { memo } from "react";
 import { Card as CardType } from "@/game-engine/types";
 import Card from "./card";
 
@@ -10,7 +11,7 @@ interface CardHandProps {
   disabled: boolean;
 }
 
-export default function CardHand({ cards, selectedIndex, onSelectCard, playableCards, disabled }: CardHandProps) {
+const CardHand = memo(function CardHand({ cards, selectedIndex, onSelectCard, playableCards, disabled }: CardHandProps) {
   return (
     <div className="fixed bottom-0 left-0 right-0 p-4 pb-6 bg-gradient-to-t from-surface via-surface/95 to-transparent">
       <div className="flex justify-center items-end gap-1 overflow-x-auto pb-2">
@@ -20,4 +21,6 @@ export default function CardHand({ cards, selectedIndex, onSelectCard, playableC
       </div>
     </div>
   );
-}
+});
+
+export default CardHand;

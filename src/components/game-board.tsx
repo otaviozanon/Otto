@@ -50,7 +50,7 @@ export default function GameBoard() {
   const isMyTurn = gameState.currentPlayerId === myPlayerId;
   const hasDrawn = gameState.isDrawing;
 
-  const playableCards = gameState.hand.map((card: CardType) => {
+  const playableCards = useMemo(() => gameState.hand.map((card: CardType) => {
     if (!isMyTurn) return false;
     if (gameState.canStack) return card.type === room?.stackChain?.type;
     if (hasDrawn) return false;
@@ -60,7 +60,7 @@ export default function GameBoard() {
     if (card.type !== "number" && top.type !== "number" && card.type === top.type) return true;
     if (card.type === "number" && top.type === "number" && card.value === top.value) return true;
     return false;
-  });
+  }), [gameState.hand, gameState.currentCard, gameState.currentColor, gameState.canStack, isMyTurn, hasDrawn, room?.stackChain?.type]);
 
   const handlePlay = useCallback(() => {
     if (selectedIndex == null) return;

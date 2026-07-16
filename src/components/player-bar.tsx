@@ -1,9 +1,10 @@
 "use client";
+import { memo } from "react";
 import { PlayerPublic } from "@/game-engine/types";
 
 interface PlayerBarProps { players: PlayerPublic[]; currentPlayerId: string; myPlayerId: string; direction: 1 | -1; }
 
-export default function PlayerBar({ players, currentPlayerId, myPlayerId, direction }: PlayerBarProps) {
+const PlayerBar = memo(function PlayerBar({ players, currentPlayerId, myPlayerId, direction }: PlayerBarProps) {
   const others = players.filter((p) => p.id !== myPlayerId);
   return (
     <div className="flex justify-center gap-3 flex-wrap px-4 pt-4">
@@ -14,7 +15,9 @@ export default function PlayerBar({ players, currentPlayerId, myPlayerId, direct
           <span className="text-[10px] text-text-muted">cartas</span>
         </div>
       ))}
-      {direction === -1 && <span className="text-xs text-text-muted self-center">↺ invertido</span>}
+      {direction === -1 ? <span className="text-xs text-text-muted self-center">↺ invertido</span> : null}
     </div>
   );
-}
+});
+
+export default PlayerBar;
