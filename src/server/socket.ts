@@ -102,7 +102,8 @@ function handlePlay(
   }
 
   const isSpecial = ["skip", "reverse", "draw2", "wild", "wild4"].includes(lastCard.type);
-  if (lastCard.type === "reverse" && updated.stackChain) {
+  const isTwoPlayerSkipOrReverse = (lastCard.type === "reverse" || (lastCard.type === "skip" && updated.players.length === 2));
+  if (isTwoPlayerSkipOrReverse && updated.stackChain) {
     updated = resolveStack(updated);
   } else if (isSpecial && updated.stackChain) {
     updated = advanceAfterStack(updated);
