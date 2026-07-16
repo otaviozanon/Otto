@@ -46,7 +46,19 @@ export function playCard(room: Room, playerId: string, cardIndex: number): Room 
   }
 
   if (room.stackChain && !isStackingPlay) {
-    throw new Error("Voce deve empilhar ou comprar");
+    if (room.stackChain.type === "draw2" || room.stackChain.type === "wild4") {
+      throw new Error("Voce deve empilhar ou comprar");
+    }
+    room = resolveStack(room);
+    const newPIdx = room.players.findIndex((p) => p.id === playerId);
+    if (newPIdx === -1) return room;
+    const newPlayer = room.players[newPIdx];
+    if (cardIndex >= newPlayer.hand.length) return room;
+    const newCard = newPlayer.hand[cardIndex];
+    if (!isPlayable(newCard, room.discardPile[room.discardPile.length - 1], room.currentColor)) {
+      return room;
+    }
+    return playCard(room, playerId, cardIndex);
   }
 
   const remainingHand = [...player.hand.slice(0, cardIndex), ...player.hand.slice(cardIndex + 1)];

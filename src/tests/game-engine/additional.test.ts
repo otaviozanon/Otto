@@ -100,12 +100,13 @@ describe("Reverse stacking: reverse on reverse", () => {
   });
 });
 
-describe("Skip stacking: skip blocked when no skip in hand", () => {
-  it("player must stack skip or draw (pass)", () => {
+describe("Skip chain: normal play allowed for non-penalty chains", () => {
+  it("player with matching color card can play normally after skip", () => {
     let room = joinRoom(joinRoom(joinRoom(createRoom("P0"), "P1"), "P2"), "P3");
     let s = startGame(room);
     s = {
       ...s, currentColor: "red", currentPlayerIndex: 0,
+      drawPile: Array.from({ length: 5 }, () => ({ type: "number" as const, color: "red" as const, value: 1 })),
       discardPile: [{ type: "number", color: "red", value: 5 } as Card],
       players: [
         { ...s.players[0], hand: [{ type: "skip", color: "red" } as Card, { type: "number", color: "red", value: 1 } as Card] },
@@ -116,7 +117,10 @@ describe("Skip stacking: skip blocked when no skip in hand", () => {
     };
     s = playCard(s, s.players[0].id, 0);
     s = advanceAfterStack(s);
-    expect(() => playCard(s, s.players[1].id, 0)).toThrow("Voce deve empilhar ou comprar");
+    expect(s.stackChain).not.toBeNull();
+
+    s = playCard(s, s.players[1].id, 0);
+    expect(s.discardPile[s.discardPile.length - 1].type).toBe("number");
   });
 });
 

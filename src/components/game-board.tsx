@@ -54,7 +54,7 @@ export default function GameBoard() {
   const playableCards = useMemo(() => gameState.hand.map((card: CardType) => {
     if (!isMyTurn) return false;
     if (hasDrawn) return false;
-    if (room?.stackChain) {
+    if (room?.stackChain && (room.stackChain.type === "draw2" || room.stackChain.type === "wild4")) {
       return card.type === room.stackChain.type;
     }
     if (card.type === "wild" || card.type === "wild4") return true;
