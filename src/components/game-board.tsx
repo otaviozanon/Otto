@@ -51,7 +51,7 @@ export default function GameBoard() {
   const isMyTurn = gameState.currentPlayerId === myPlayerId;
   const hasDrawn = gameState.isDrawing;
 
-  const playableCards = useMemo(() => gameState.hand.map((card: CardType) => {
+  const playableCards = useMemo(() => gameState.hand.map((card: CardType, i: number) => {
     if (!isMyTurn) return false;
     if (hasDrawn) {
       if (gameState.hand.length > 0 && gameState.drawnCardPlayable && i === gameState.hand.length - 1) return true;
