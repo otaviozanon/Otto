@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useState, useEffect, useMemo } from "react";
+import { useCallback, useState, useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { useGameStore } from "@/lib/store";
@@ -27,6 +27,19 @@ export default function GameBoard() {
   const room = useGameStore((s) => s.room);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [timer, setTimer] = useState(15);
+  const [showTurnBanner, setShowTurnBanner] = useState(false);
+  const prevTurnRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!gameState) return;
+    if (gameState.currentPlayerId === myPlayerId && prevTurnRef.current !== myPlayerId) {
+      setShowTurnBanner(true);
+      const t = setTimeout(() => setShowTurnBanner(false), 2000);
+      prevTurnRef.current = myPlayerId as string;
+      return () => clearTimeout(t);
+    }
+    prevTurnRef.current = gameState.currentPlayerId;
+  }, [gameState?.currentPlayerId, myPlayerId]);
 
   useEffect(() => {
     if (!gameState) return;
@@ -82,6 +95,20 @@ export default function GameBoard() {
   return (
     <div className="min-h-dvh flex flex-col">
       <PlayerBar players={gameState.players} currentPlayerId={gameState.currentPlayerId} myPlayerId={myPlayerId!} direction={gameState.direction} />
+
+      <AnimatePresence>
+        {showTurnBanner && (
+          <motion.div
+            initial={{ opacity: 0, y: -30, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+            className="mx-4 mt-3 px-4 py-2.5 rounded-xl bg-gradient-to-r from-uno-red/20 to-uno-red/5 border border-uno-red/30 text-center"
+          >
+            <span className="text-sm font-black text-uno-red tracking-wider">SEU TURNO</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {room?.stackChain && (

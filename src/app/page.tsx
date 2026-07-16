@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
 import { connectSocket, getSocket } from "@/lib/socket";
 import { setupSocketListeners, useGameStore } from "@/lib/store";
 import { Room } from "@/game-engine/types";
@@ -37,11 +38,18 @@ export default function HomePage() {
     <main className="min-h-dvh flex items-center justify-center p-4 bg-surface">
       <div className="w-full max-w-md space-y-10 animate-fade-in">
         <div className="text-center space-y-4">
-          <div className="flex justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 30 30" className="drop-shadow-[0_0_20px_rgba(231,76,60,0.4)]">
-              <path fill="#e74c3c" d="M6.03 5.73v17.79L2.05 8.45C1.82 7.59 2.34 6.7 3.21 6.47L6.03 5.73zM12.17 3.99c-.1.21-.19.43-.25.67L8.03 19.18V5.61c0-.9.72-1.62 1.62-1.62H12.17zM22.351 27.574l-11.962-3.201c-.865-.232-1.379-1.121-1.148-1.986l4.606-17.214c.232-.865 1.121-1.379 1.986-1.148l11.962 3.201c.865.232 1.379 1.121 1.148 1.986l-4.606 17.214C24.106 27.292 23.217 27.806 22.351 27.574zM20.436 10.632c-1.912 2.144-5.181 1.923-5.937 4.713-.325 1.199.383 2.433 1.582 2.758 1.229.333 2.129-.461 2.452-.806-.792 1.826-2.026 2.918-2.026 2.918s1.408-.284 2.48.673c0 0-.514-1.565-.276-3.54.105.462.48 1.598 1.71 1.932 1.199.325 2.433-.383 2.758-1.582C23.935 14.909 21.003 13.449 20.436 10.632z"/>
-            </svg>
-          </div>
+          <motion.div
+            className="flex justify-center"
+            animate={{ y: [0, -8, 0] }}
+            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+          >
+            <div className="relative">
+              <div className="absolute inset-0 bg-uno-red/30 blur-2xl rounded-full scale-150" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 30 30" className="relative drop-shadow-[0_0_30px_rgba(231,76,60,0.6)]">
+                <path fill="#e74c3c" d="M6.03 5.73v17.79L2.05 8.45C1.82 7.59 2.34 6.7 3.21 6.47L6.03 5.73zM12.17 3.99c-.1.21-.19.43-.25.67L8.03 19.18V5.61c0-.9.72-1.62 1.62-1.62H12.17zM22.351 27.574l-11.962-3.201c-.865-.232-1.379-1.121-1.148-1.986l4.606-17.214c.232-.865 1.121-1.379 1.986-1.148l11.962 3.201c.865.232 1.379 1.121 1.148 1.986l-4.606 17.214C24.106 27.292 23.217 27.806 22.351 27.574zM20.436 10.632c-1.912 2.144-5.181 1.923-5.937 4.713-.325 1.199.383 2.433 1.582 2.758 1.229.333 2.129-.461 2.452-.806-.792 1.826-2.026 2.918-2.026 2.918s1.408-.284 2.48.673c0 0-.514-1.565-.276-3.54.105.462.48 1.598 1.71 1.932 1.199.325 2.433-.383 2.758-1.582C23.935 14.909 21.003 13.449 20.436 10.632z"/>
+              </svg>
+            </div>
+          </motion.div>
           <h1 className="text-5xl font-black text-text-primary tracking-tight">Otto</h1>
           <p className="text-text-secondary text-lg mt-1 font-medium">Uno Multiplayer</p>
           <p className="text-text-muted text-sm">2-15 jogadores</p>
