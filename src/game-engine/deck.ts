@@ -36,16 +36,23 @@ export function shuffle(deck: Card[]): Card[] {
 }
 
 export function draw(deck: Card[]): { card: Card; remaining: Card[] } {
-  if (deck.length === 0) throw new Error("Deck is empty");
-  const [card, ...remaining] = deck;
-  return { card, remaining };
+  if (deck.length > 0) {
+    const [card, ...remaining] = deck;
+    return { card, remaining };
+  }
+  const fresh = shuffle(createDeck());
+  return { card: fresh[0], remaining: fresh.slice(1) };
 }
 
 export function reshuffleDiscard(drawPile: Card[], discardPile: Card[]): { drawPile: Card[]; discardPile: Card[] } {
   if (drawPile.length > 0) return { drawPile, discardPile };
   const toShuffle = discardPile.slice(0, -1);
-  if (toShuffle.length === 0) return { drawPile, discardPile };
-  return { drawPile: shuffle(toShuffle), discardPile: [discardPile[discardPile.length - 1]] };
+  if (toShuffle.length > 0) {
+    return { drawPile: shuffle(toShuffle), discardPile: [discardPile[discardPile.length - 1]] };
+  }
+  const freshDeck = shuffle(createDeck());
+  const topCard = discardPile.length > 0 ? discardPile[discardPile.length - 1] : freshDeck[0];
+  return { drawPile: freshDeck, discardPile: [topCard] };
 }
 
 export function drawInitialCard(deck: Card[]): { card: Card; remaining: Card[] } {

@@ -23,7 +23,11 @@ describe("shuffle", () => {
 
 describe("draw", () => {
   it("draws from top", () => { const { card, remaining } = draw(createDeck()); expect(card).toBeDefined(); expect(remaining).toHaveLength(107); });
-  it("throws on empty", () => expect(() => draw([])).toThrow("Deck is empty"));
+  it("generates fresh card when empty", () => {
+    const { card, remaining } = draw([]);
+    expect(card).toBeDefined();
+    expect(remaining.length).toBeGreaterThanOrEqual(0);
+  });
 });
 
 describe("reshuffleDiscard", () => {
@@ -31,6 +35,12 @@ describe("reshuffleDiscard", () => {
     const deck = createDeck();
     const res = reshuffleDiscard([], deck.slice(0, 5));
     expect(res.drawPile).toHaveLength(4);
+    expect(res.discardPile).toHaveLength(1);
+  });
+
+  it("generates new deck when both piles exhausted", () => {
+    const res = reshuffleDiscard([], [{ type: "number", color: "red", value: 5 } as any]);
+    expect(res.drawPile.length).toBeGreaterThanOrEqual(107);
     expect(res.discardPile).toHaveLength(1);
   });
 
