@@ -6,7 +6,7 @@ import { isPlayable, requiresColorChoice } from "@/game-engine/rules";
 import { getRoom, setRoom, deleteRoom, mapSocketToPlayer, removeSocketMapping, getRoomBySocketId, getPlayerIdBySocketId, getSocketId } from "./rooms";
 import { Room, PlayerGameState, PlayerPublic, Card, Color } from "@/game-engine/types";
 
-const TURN_TIMEOUT = 15000;
+const TURN_TIMEOUT = 20000;
 
 const roomTimers = new Map<string, ReturnType<typeof setTimeout>>();
 const timerStartedAt = new Map<string, number>();
