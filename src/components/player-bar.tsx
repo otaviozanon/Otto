@@ -35,11 +35,11 @@ const PlayerBar = memo(function PlayerBar({ players, currentPlayerId, myPlayerId
                 />
               )}
 
-              <span className="text-[10px] text-text-muted truncate max-w-[72px] leading-tight">{p.name}</span>
-              <span className={`text-lg font-black ${isCurrent ? "text-uno-red" : "text-text-primary"}`}>
+              <span className="text-[10px] text-white/60 truncate max-w-[72px] leading-tight">{p.name}</span>
+              <span className="text-lg font-black text-white">
                 {p.cardCount}
               </span>
-              <span className="text-[9px] text-text-muted leading-none">cartas</span>
+              <span className="text-[9px] text-white/40 leading-none">cartas</span>
             </motion.div>
           );
         })}
