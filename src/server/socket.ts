@@ -288,6 +288,9 @@ export function setupSocket(io: SocketIOServer): void {
         return;
       }
       let updated = chooseColor(room, color as typeof valid[number]);
+      if (updated.stackChain?.type === "wild4") {
+        updated = advanceAfterStack(updated);
+      }
       updated = resolveStack(updated);
       setRoom(room.id, updated);
       if (updated.status === "finished") {
