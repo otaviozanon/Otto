@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { connectSocket, getSocket } from "@/lib/socket";
 import { setupSocketListeners, useGameStore } from "@/lib/store";
 import { Room } from "@/game-engine/types";
-import { Users, LogIn, ArrowRight, Gamepad2 } from "lucide-react";
+import { Users, LogIn, ArrowRight } from "lucide-react";
 import RulesModal from "@/components/rules-modal";
 
 export default function HomePage() {
@@ -38,8 +38,8 @@ export default function HomePage() {
       <div className="w-full max-w-md space-y-10 animate-fade-in">
         <div className="text-center space-y-4">
           <div className="flex justify-center">
-            <div className="w-18 h-24 rounded-2xl bg-uno-red flex items-center justify-center shadow-2xl shadow-uno-red/30 animate-float">
-              <Gamepad2 size={40} className="text-white" />
+            <div className="w-16 h-22 rounded-xl bg-uno-red flex items-center justify-center shadow-2xl shadow-uno-red/30 animate-float border-2 border-white/20">
+              <span className="text-white font-black text-2xl">U</span>
             </div>
           </div>
           <h1 className="text-5xl font-black text-text-primary tracking-tight">Otto</h1>
