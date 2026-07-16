@@ -53,15 +53,17 @@ export default function GameBoard() {
 
   const playableCards = useMemo(() => gameState.hand.map((card: CardType) => {
     if (!isMyTurn) return false;
-    if (gameState.canStack) return card.type === room?.stackChain?.type;
     if (hasDrawn) return false;
+    if (room?.stackChain) {
+      return card.type === room.stackChain.type;
+    }
     if (card.type === "wild" || card.type === "wild4") return true;
     const top = gameState.currentCard;
     if ("color" in card && card.color === gameState.currentColor) return true;
     if (card.type !== "number" && top.type !== "number" && card.type === top.type) return true;
     if (card.type === "number" && top.type === "number" && card.value === top.value) return true;
     return false;
-  }), [gameState.hand, gameState.currentCard, gameState.currentColor, gameState.canStack, isMyTurn, hasDrawn, room?.stackChain?.type]);
+  }), [gameState.hand, gameState.currentCard, gameState.currentColor, isMyTurn, hasDrawn, room?.stackChain?.type]);
 
   const handlePlay = useCallback(() => {
     if (selectedIndex == null) return;

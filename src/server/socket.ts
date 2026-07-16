@@ -37,8 +37,7 @@ function sendYourState(io: SocketIOServer, room: Room): void {
     const sockId = getSocketId(player.id);
     if (!sockId) continue;
     const isMyTurn = player.id === currentPlayer?.id;
-    const canPlay = isMyTurn && player.hand.some((c) => {
-      if (room.stackChain && c.type === room.stackChain.type) return true;
+    const canPlay = isMyTurn && !room.stackChain && player.hand.some((c) => {
       return isPlayable(c, topCard, room.currentColor);
     });
     const drawnCard = room.lastDrawnCard[player.id];
