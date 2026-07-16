@@ -23,8 +23,8 @@ const PlayerBar = memo(function PlayerBar({ players, currentPlayerId, myPlayerId
               className={`
                 relative flex flex-col items-center gap-0.5 px-4 py-2.5 rounded-xl min-w-[72px]
                 ${isCurrent
-                  ? "bg-brand/20 border-2 border-uno-red"
-                  : "bg-surface-raised border border-border opacity-70"}
+                  ? "bg-brand/15 border-2 border-brand/40"
+                  : "bg-surface-raised border border-border opacity-60"}
               `}
             >
               {isCurrent && (

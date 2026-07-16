@@ -135,7 +135,7 @@ export default function GameBoard() {
                   }}
                 />
               ))}
-              <div className="absolute inset-0 w-[70px] h-[98px] rounded-[8px] bg-gradient-to-b from-brand/20 to-uno-red/5 border border-brand/30 flex items-center justify-center z-10 shadow-lg">
+              <div className="absolute inset-0 w-[70px] h-[98px] rounded-[8px] bg-gradient-to-b from-brand/20 to-brand/5 border border-brand/30 flex items-center justify-center z-10 shadow-lg">
                 <span className="text-lg font-black text-white/60">{gameState.drawPileCount}</span>
               </div>
             </div>
