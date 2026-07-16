@@ -21,7 +21,7 @@ function cardKey(card: CardType, i: number): string {
 
 const CardHand = memo(function CardHand({ cards, selectedIndex, onSelectCard, playableCards, disabled, cardCount, isDrawing }: CardHandProps) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 px-4 pt-10 pb-5 bg-gradient-to-t from-surface via-surface/98 to-transparent z-20">
+    <div className="fixed bottom-0 left-0 right-0 px-4 pt-10 pb-8 bg-gradient-to-t from-surface via-surface/98 to-transparent z-20">
       <div className="flex justify-center items-end gap-1.5 overflow-visible pb-1.5 min-h-[130px]">
         {cards.map((card, i) => (
           <Card
