@@ -1,0 +1,23 @@
+"use client";
+import { Card as CardType } from "@/game-engine/types";
+import Card from "./card";
+
+interface CardHandProps {
+  cards: CardType[];
+  selectedIndex: number | null;
+  onSelectCard: (index: number) => void;
+  playableCards: boolean[];
+  disabled: boolean;
+}
+
+export default function CardHand({ cards, selectedIndex, onSelectCard, playableCards, disabled }: CardHandProps) {
+  return (
+    <div className="fixed bottom-0 left-0 right-0 p-4 pb-6 bg-gradient-to-t from-surface via-surface/95 to-transparent">
+      <div className="flex justify-center items-end gap-1 overflow-x-auto pb-2">
+        {cards.map((card, i) => (
+          <Card key={i} card={card} selected={selectedIndex === i} playable={playableCards[i] && !disabled} onClick={() => onSelectCard(i)} size="md" />
+        ))}
+      </div>
+    </div>
+  );
+}
