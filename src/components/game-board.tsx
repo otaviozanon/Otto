@@ -85,37 +85,57 @@ export default function GameBoard() {
       )}
 
       <div className="flex-1 flex flex-col items-center justify-center gap-6 p-4">
-        <div className="flex items-center gap-6">
-          <div className="flex flex-col items-center gap-1">
-            <div className="w-16 h-22 rounded-xl bg-surface-raised border-2 border-border flex flex-col items-center justify-center relative overflow-hidden">
+        <div className="flex items-center gap-8">
+          <div className="flex flex-col items-center gap-1.5">
+            <div className="relative w-[56px] h-[80px]">
               {Array.from({ length: Math.min(gameState.drawPileCount, 3) }).map((_, i) => (
-                <div key={i} className="absolute w-14 h-20 rounded-lg bg-uno-red/30 border border-uno-red/40"
-                  style={{ top: `${i * 3}px`, left: "3px", transform: `rotate(${(i - 1) * 2}deg)` }} />
+                <div key={i}
+                  className="absolute w-[56px] h-[80px] rounded-[8px] bg-gradient-to-b from-gray-800 to-gray-900 border border-white/10 shadow-md"
+                  style={{
+                    top: `${-i * 2}px`,
+                    left: `${-i * 2}px`,
+                    transform: `rotate(${(i - 1) * 3}deg)`,
+                    zIndex: 3 - i,
+                  }}
+                />
               ))}
-              <span className="text-2xl font-black text-text-muted relative z-10">{gameState.drawPileCount}</span>
+              <div className="absolute inset-0 w-[56px] h-[80px] rounded-[8px] bg-gradient-to-b from-uno-red/20 to-uno-red/5 border border-uno-red/30 flex items-center justify-center z-10 shadow-lg">
+                <span className="text-lg font-black text-white/60">{gameState.drawPileCount}</span>
+              </div>
             </div>
-            <span className="text-xs text-text-muted">Comprar</span>
+            <span className="text-[10px] text-text-muted tracking-wider uppercase">Comprar</span>
           </div>
 
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-1.5">
             <Card card={gameState.currentCard} size="lg" />
-            <div className="flex items-center gap-1">
-              <div className={`w-3 h-3 rounded-full ${gameState.currentColor === "red" ? "bg-uno-red" : gameState.currentColor === "blue" ? "bg-uno-blue" : gameState.currentColor === "green" ? "bg-uno-green" : "bg-uno-yellow"}`} />
-              <span className="text-xs text-text-muted capitalize">{gameState.currentColor === "red" ? "Vermelho" : gameState.currentColor === "blue" ? "Azul" : gameState.currentColor === "green" ? "Verde" : "Amarelo"}</span>
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-surface-raised border border-border">
+              <div className={`w-2.5 h-2.5 rounded-full shadow-[0_0_6px_currentColor] ${
+                gameState.currentColor === "red" ? "bg-uno-red text-uno-red" :
+                gameState.currentColor === "blue" ? "bg-uno-blue text-uno-blue" :
+                gameState.currentColor === "green" ? "bg-uno-green text-uno-green" :
+                "bg-uno-yellow text-uno-yellow"
+              }`} />
+              <span className="text-[10px] text-text-muted font-medium tracking-wider uppercase">
+                {gameState.currentColor === "red" ? "Vermelho" :
+                 gameState.currentColor === "blue" ? "Azul" :
+                 gameState.currentColor === "green" ? "Verde" : "Amarelo"}
+              </span>
             </div>
           </div>
 
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-1.5">
             {isMyTurn ? (
-              <div className="text-center">
-                <span className={`text-2xl font-black ${timer <= 5 ? "text-accent-danger animate-pulse" : "text-text-primary"}`}>{timer}s</span>
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-black transition-colors duration-300 ${
+                timer <= 5 ? "bg-accent-danger/20 text-accent-danger animate-pulse" : "bg-surface-raised text-text-primary border border-border"
+              }`}>
+                {timer}
               </div>
             ) : (
-              <div className="text-center">
-                <span className="text-lg font-bold text-text-muted">🔒</span>
+              <div className="w-12 h-12 rounded-full bg-surface-raised border border-border flex items-center justify-center">
+                <span className="text-base">🔒</span>
               </div>
             )}
-            <span className="text-xs text-text-muted">{isMyTurn ? "Seu turno" : "Aguardando"}</span>
+            <span className="text-[10px] text-text-muted tracking-wider uppercase">{isMyTurn ? "Seu turno" : "Aguardando"}</span>
           </div>
         </div>
 
