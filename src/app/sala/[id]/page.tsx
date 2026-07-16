@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useCallback, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { getSocket } from "@/lib/socket";
-import { useGameStore } from "@/lib/store";
+import { getSocket, connectSocket } from "@/lib/socket";
+import { useGameStore, setupSocketListeners } from "@/lib/store";
 import { Copy, Play, Users, Crown, WifiOff } from "lucide-react";
 import RulesModal from "@/components/rules-modal";
 
@@ -13,6 +13,7 @@ export default function RoomPage() {
   const params = useParams();
   const { room, myPlayerId } = useGameStore();
 
+  useEffect(() => { setupSocketListeners(); connectSocket(); }, []);
   useEffect(() => { if (!room) router.push("/"); }, [room, router]);
 
   const idRef = useRef(params.id);
