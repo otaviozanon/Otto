@@ -1,10 +1,40 @@
 import { Server as SocketIOServer, Socket } from "socket.io";
-import { createRoom, joinRoom, removePlayer, setPlayerDisconnected, isPlayerTurn } from "@/game-engine/room";
-import { startGame, playCard, drawCard, playDrawnCard, passTurn, callUno, chooseColor, processTurnTimeout } from "@/game-engine/game";
+import {
+  createRoom,
+  joinRoom,
+  removePlayer,
+  setPlayerDisconnected,
+  isPlayerTurn,
+} from "@/game-engine/room";
+import {
+  startGame,
+  playCard,
+  drawCard,
+  playDrawnCard,
+  passTurn,
+  callUno,
+  chooseColor,
+  processTurnTimeout,
+} from "@/game-engine/game";
 import { resolveStack, advanceAfterStack } from "@/game-engine/stacking";
 import { isPlayable, requiresColorChoice } from "@/game-engine/rules";
-import { getRoom, setRoom, deleteRoom, mapSocketToPlayer, removeSocketMapping, getRoomBySocketId, getPlayerIdBySocketId, getSocketId } from "./rooms";
-import { Room, PlayerGameState, PlayerPublic, Card, Color } from "@/game-engine/types";
+import {
+  getRoom,
+  setRoom,
+  deleteRoom,
+  mapSocketToPlayer,
+  removeSocketMapping,
+  getRoomBySocketId,
+  getPlayerIdBySocketId,
+  getSocketId,
+} from "./rooms";
+import {
+  Room,
+  PlayerGameState,
+  PlayerPublic,
+  Card,
+  Color,
+} from "@/game-engine/types";
 
 const TURN_TIMEOUT = 15000;
 const SUBSEQUENT_TIMEOUT = 10000;
@@ -24,14 +54,21 @@ function clearRoomTimer(roomId: string): void {
 function startTurnTimer(io: SocketIOServer, room: Room, roomId: string): void {
   clearRoomTimer(roomId);
   const currentId = room.players[room.currentPlayerIndex]?.id;
-  if (currentId && lastPlayerPerRoom.get(roomId) !== currentId) {
+
+  // Reset counter if player changed OR if this is a new action by same player
+  const lastPlayer = lastPlayerPerRoom.get(roomId);
+  const isNewPlayer = currentId && lastPlayer !== currentId;
+
+  if (isNewPlayer) {
     turnActionCount.set(roomId, 0);
     lastPlayerPerRoom.set(roomId, currentId);
   }
+
   const count = turnActionCount.get(roomId) || 0;
   const duration = count === 0 ? TURN_TIMEOUT : SUBSEQUENT_TIMEOUT;
   turnActionCount.set(roomId, count + 1);
   timerStartedAt.set(roomId, Date.now());
+
   const timer = setTimeout(() => {
     turnActionCount.set(roomId, 0);
     const r = getRoom(roomId);
@@ -53,30 +90,49 @@ function sendYourState(io: SocketIOServer, room: Room): void {
     const sockId = getSocketId(player.id);
     if (!sockId) continue;
     const isMyTurn = player.id === currentPlayer?.id;
-    const chainBlocksNormalPlay = room.stackChain && (room.stackChain.type === "draw2" || room.stackChain.type === "wild4");
-    const canPlay = isMyTurn && !chainBlocksNormalPlay && player.hand.some((c) => {
-      return isPlayable(c, topCard, room.currentColor);
-    });
+    const chainBlocksNormalPlay =
+      room.stackChain &&
+      (room.stackChain.type === "draw2" || room.stackChain.type === "wild4");
+    const canPlay =
+      isMyTurn &&
+      !chainBlocksNormalPlay &&
+      player.hand.some((c) => {
+        return isPlayable(c, topCard, room.currentColor);
+      });
     const drawnCard = room.lastDrawnCard[player.id];
-    const canStack = isMyTurn && room.stackChain
-      ? player.hand.some((c) => c.type === room.stackChain!.type)
-      : false;
+    const canStack =
+      isMyTurn && room.stackChain
+        ? player.hand.some((c) => c.type === room.stackChain!.type)
+        : false;
     const state: PlayerGameState = {
       hand: player.hand,
       currentCard: topCard,
       currentColor: room.currentColor,
       drawPileCount: room.drawPile.length,
       direction: room.direction,
-      players: room.players.map((p) => ({ id: p.id, name: p.name, cardCount: p.hand.length })),
+      players: room.players.map((p) => ({
+        id: p.id,
+        name: p.name,
+        cardCount: p.hand.length,
+      })),
       currentPlayerId: currentPlayer?.id || "",
-      turnTimer: isMyTurn ? Math.max(0, Math.ceil((TURN_TIMEOUT - (Date.now() - (timerStartedAt.get(room.id) ?? Date.now()))) / 1000)) : 0,
+      turnTimer: isMyTurn
+        ? (() => {
+            const count = turnActionCount.get(room.id) || 0;
+            const duration = count <= 1 ? TURN_TIMEOUT : SUBSEQUENT_TIMEOUT;
+            const elapsed =
+              Date.now() - (timerStartedAt.get(room.id) ?? Date.now());
+            return Math.max(0, Math.ceil((duration - elapsed) / 1000));
+          })()
+        : 0,
       calledUno: room.calledUno[player.id] || false,
       canPlay,
       canStack,
       isDrawing: isMyTurn && drawnCard != null,
-      drawnCardPlayable: isMyTurn && drawnCard != null
-        ? isPlayable(drawnCard, topCard, room.currentColor)
-        : false,
+      drawnCardPlayable:
+        isMyTurn && drawnCard != null
+          ? isPlayable(drawnCard, topCard, room.currentColor)
+          : false,
     };
     io.to(sockId).emit("game:your-state", state);
   }
@@ -91,7 +147,7 @@ function handlePlay(
   socket: Socket,
   room: Room,
   playerId: string,
-  afterPlay: (r: Room, pid: string) => Room
+  afterPlay: (r: Room, pid: string) => Room,
 ): void {
   clearRoomTimer(room.id);
   let updated = afterPlay(room, playerId);
@@ -114,8 +170,12 @@ function handlePlay(
     return;
   }
 
-  const isSpecial = ["skip", "reverse", "draw2", "wild", "wild4"].includes(lastCard.type);
-  const isTwoPlayerSkipOrReverse = (lastCard.type === "reverse" || (lastCard.type === "skip" && updated.players.length === 2));
+  const isSpecial = ["skip", "reverse", "draw2", "wild", "wild4"].includes(
+    lastCard.type,
+  );
+  const isTwoPlayerSkipOrReverse =
+    lastCard.type === "reverse" ||
+    (lastCard.type === "skip" && updated.players.length === 2);
   if (isTwoPlayerSkipOrReverse && updated.stackChain) {
     updated = resolveStack(updated);
   } else if (isSpecial && updated.stackChain) {
@@ -142,23 +202,29 @@ const VALID_NAME_RE = /^[\p{L}\p{N} _-]{1,20}$/u;
 const VALID_ROOM_RE = /^[A-Z0-9]{1,6}$/;
 
 function validateName(name: unknown): string | null {
-  if (typeof name !== "string" || !name.trim()) return "Nome nao pode ser vazio";
-  if (!VALID_NAME_RE.test(name.trim())) return "Nome deve ter 1-20 caracteres (letras, numeros, espacos, _, -)";
+  if (typeof name !== "string" || !name.trim())
+    return "Nome nao pode ser vazio";
+  if (!VALID_NAME_RE.test(name.trim()))
+    return "Nome deve ter 1-20 caracteres (letras, numeros, espacos, _, -)";
   return null;
 }
 
 function validateRoomCode(code: unknown): string | null {
-  if (typeof code !== "string" || !code.trim()) return "Codigo da sala nao pode ser vazio";
-  if (!VALID_ROOM_RE.test(code.trim().toUpperCase())) return "Codigo invalido (use A-Z e 0-9, ate 6 digitos)";
+  if (typeof code !== "string" || !code.trim())
+    return "Codigo da sala nao pode ser vazio";
+  if (!VALID_ROOM_RE.test(code.trim().toUpperCase()))
+    return "Codigo invalido (use A-Z e 0-9, ate 6 digitos)";
   return null;
 }
 
 export function setupSocket(io: SocketIOServer): void {
   io.on("connection", (socket: Socket) => {
-
     socket.on("room:create", ({ playerName }: { playerName: string }) => {
       const err = validateName(playerName);
-      if (err) { socket.emit("error", { message: err }); return; }
+      if (err) {
+        socket.emit("error", { message: err });
+        return;
+      }
       const room = createRoom(playerName.trim());
       setRoom(room.id, room);
       const player = room.players[0];
@@ -168,38 +234,70 @@ export function setupSocket(io: SocketIOServer): void {
       socket.emit("room:state", room);
     });
 
-    socket.on("room:join", ({ roomCode, playerName }: { roomCode: string; playerName: string }) => {
-      const codeErr = validateRoomCode(roomCode);
-      if (codeErr) { socket.emit("error", { message: codeErr }); return; }
-      const nameErr = validateName(playerName);
-      if (nameErr) { socket.emit("error", { message: nameErr }); return; }
-      const room = getRoom(roomCode.trim().toUpperCase());
-      if (!room) { socket.emit("error", { message: "Sala nao encontrada" }); return; }
-      if (room.status !== "lobby") { socket.emit("error", { message: "Jogo ja iniciado nesta sala" }); return; }
-      if (room.players.length >= 15) { socket.emit("error", { message: "Sala cheia (maximo 15 jogadores)" }); return; }
-      try {
-        const updated = joinRoom(room, playerName.trim());
-        setRoom(room.id, updated);
+    socket.on(
+      "room:join",
+      ({ roomCode, playerName }: { roomCode: string; playerName: string }) => {
+        const codeErr = validateRoomCode(roomCode);
+        if (codeErr) {
+          socket.emit("error", { message: codeErr });
+          return;
+        }
+        const nameErr = validateName(playerName);
+        if (nameErr) {
+          socket.emit("error", { message: nameErr });
+          return;
+        }
+        const room = getRoom(roomCode.trim().toUpperCase());
+        if (!room) {
+          socket.emit("error", { message: "Sala nao encontrada" });
+          return;
+        }
+        if (room.status !== "lobby") {
+          socket.emit("error", { message: "Jogo ja iniciado nesta sala" });
+          return;
+        }
+        if (room.players.length >= 15) {
+          socket.emit("error", { message: "Sala cheia (maximo 15 jogadores)" });
+          return;
+        }
+        try {
+          const updated = joinRoom(room, playerName.trim());
+          setRoom(room.id, updated);
           const player = updated.players[updated.players.length - 1];
-        mapSocketToPlayer(socket.id, room.id, player.id);
-        socket.join(room.id);
-        socket.emit("player:id", player.id);
-        io.to(room.id).emit("room:state", updated);
-      } catch (e: any) {
-        socket.emit("error", { message: e.message });
-      }
-    });
+          mapSocketToPlayer(socket.id, room.id, player.id);
+          socket.join(room.id);
+          socket.emit("player:id", player.id);
+          io.to(room.id).emit("room:state", updated);
+        } catch (e: any) {
+          socket.emit("error", { message: e.message });
+        }
+      },
+    );
 
     socket.on("room:start", () => {
       const room = getRoomBySocketId(socket.id);
-      if (!room) { socket.emit("error", { message: "Voce nao esta em nenhuma sala" }); return; }
+      if (!room) {
+        socket.emit("error", { message: "Voce nao esta em nenhuma sala" });
+        return;
+      }
       const playerId = getPlayerIdBySocketId(socket.id);
-      if (room.host !== playerId) { socket.emit("error", { message: "Apenas o host pode iniciar a partida" }); return; }
-      if (room.players.length < 2) { socket.emit("error", { message: "Minimo de 2 jogadores para iniciar" }); return; }
+      if (room.host !== playerId) {
+        socket.emit("error", {
+          message: "Apenas o host pode iniciar a partida",
+        });
+        return;
+      }
+      if (room.players.length < 2) {
+        socket.emit("error", { message: "Minimo de 2 jogadores para iniciar" });
+        return;
+      }
       try {
         const started = startGame(room);
         setRoom(room.id, started);
-          io.to(room.id).emit("room:state", { ...started, status: "playing" } as Room);
+        io.to(room.id).emit("room:state", {
+          ...started,
+          status: "playing",
+        } as Room);
         startTurnTimer(io, started, room.id);
         sendYourState(io, started);
       } catch (e: any) {
@@ -215,7 +313,10 @@ export function setupSocket(io: SocketIOServer): void {
         socket.emit("error", { message: "Nao e seu turno" });
         return;
       }
-      if (room.stackChain && requiresColorChoice(room.discardPile[room.discardPile.length - 1])) {
+      if (
+        room.stackChain &&
+        requiresColorChoice(room.discardPile[room.discardPile.length - 1])
+      ) {
         socket.emit("error", { message: "Escolha uma cor primeiro" });
         return;
       }
@@ -232,14 +333,20 @@ export function setupSocket(io: SocketIOServer): void {
           let updated = playCard(room, playerId, cardIndex);
           if (updated.status === "finished") {
             setRoom(room.id, updated);
-            io.to(room.id).emit("game:end", { winner: toPublic(updated.winner!), ranking: updated.ranking });
+            io.to(room.id).emit("game:end", {
+              winner: toPublic(updated.winner!),
+              ranking: updated.ranking,
+            });
             roomTimers.delete(room.id);
             return;
           }
           updated = resolveStack(updated);
           setRoom(room.id, updated);
           if (updated.status === "finished") {
-            io.to(room.id).emit("game:end", { winner: toPublic(updated.winner!), ranking: updated.ranking });
+            io.to(room.id).emit("game:end", {
+              winner: toPublic(updated.winner!),
+              ranking: updated.ranking,
+            });
             roomTimers.delete(room.id);
             return;
           }
@@ -247,7 +354,9 @@ export function setupSocket(io: SocketIOServer): void {
           sendYourState(io, updated);
           return;
         }
-        handlePlay(io, socket, room, playerId, (r, pid) => playCard(r, pid, cardIndex));
+        handlePlay(io, socket, room, playerId, (r, pid) =>
+          playCard(r, pid, cardIndex),
+        );
       } catch (e: any) {
         socket.emit("error", { message: e.message });
       }
@@ -261,7 +370,10 @@ export function setupSocket(io: SocketIOServer): void {
         socket.emit("error", { message: "Nao e seu turno" });
         return;
       }
-      if (room.stackChain && requiresColorChoice(room.discardPile[room.discardPile.length - 1])) {
+      if (
+        room.stackChain &&
+        requiresColorChoice(room.discardPile[room.discardPile.length - 1])
+      ) {
         socket.emit("error", { message: "Escolha uma cor primeiro" });
         return;
       }
@@ -269,13 +381,13 @@ export function setupSocket(io: SocketIOServer): void {
         if (room.stackChain) {
           const resolved = resolveStack(room);
           setRoom(room.id, resolved);
-              startTurnTimer(io, resolved, room.id);
+          startTurnTimer(io, resolved, room.id);
           sendYourState(io, resolved);
           return;
         }
         const updated = drawCard(room, playerId);
         setRoom(room.id, updated);
-          sendYourState(io, updated);
+        sendYourState(io, updated);
       } catch (e: any) {
         socket.emit("error", { message: e.message });
       }
@@ -289,7 +401,10 @@ export function setupSocket(io: SocketIOServer): void {
         socket.emit("error", { message: "Nao e seu turno" });
         return;
       }
-      if (room.stackChain && requiresColorChoice(room.discardPile[room.discardPile.length - 1])) {
+      if (
+        room.stackChain &&
+        requiresColorChoice(room.discardPile[room.discardPile.length - 1])
+      ) {
         socket.emit("error", { message: "Escolha uma cor primeiro" });
         return;
       }
@@ -308,7 +423,10 @@ export function setupSocket(io: SocketIOServer): void {
         socket.emit("error", { message: "Nao e seu turno" });
         return;
       }
-      if (room.stackChain && requiresColorChoice(room.discardPile[room.discardPile.length - 1])) {
+      if (
+        room.stackChain &&
+        requiresColorChoice(room.discardPile[room.discardPile.length - 1])
+      ) {
         socket.emit("error", { message: "Escolha uma cor primeiro" });
         return;
       }
@@ -316,7 +434,7 @@ export function setupSocket(io: SocketIOServer): void {
       if (room.stackChain) {
         const resolved = resolveStack(room);
         setRoom(room.id, resolved);
-          startTurnTimer(io, resolved, room.id);
+        startTurnTimer(io, resolved, room.id);
         sendYourState(io, resolved);
         return;
       }
@@ -334,7 +452,10 @@ export function setupSocket(io: SocketIOServer): void {
       const player = room.players.find((p) => p.id === playerId);
       const updated = callUno(room, playerId);
       setRoom(room.id, updated);
-      io.to(room.id).emit("game:uno-called", { playerId, playerName: player?.name || "Alguem" });
+      io.to(room.id).emit("game:uno-called", {
+        playerId,
+        playerName: player?.name || "Alguem",
+      });
       sendYourState(io, updated);
     });
 
@@ -348,7 +469,9 @@ export function setupSocket(io: SocketIOServer): void {
       }
       const valid = ["red", "blue", "green", "yellow"];
       if (!valid.includes(color)) {
-        socket.emit("error", { message: "Cor invalida. Use: red, blue, green ou yellow" });
+        socket.emit("error", {
+          message: "Cor invalida. Use: red, blue, green ou yellow",
+        });
         return;
       }
       let updated = chooseColor(room, color as Color);
@@ -387,10 +510,15 @@ export function setupSocket(io: SocketIOServer): void {
         const fresh = startGame({
           ...room,
           status: "lobby",
-          players: room.players.filter((p) => p.connected).map((p) => ({ ...p, hand: [] })),
+          players: room.players
+            .filter((p) => p.connected)
+            .map((p) => ({ ...p, hand: [] })),
         });
         setRoom(room.id, fresh);
-        io.to(room.id).emit("room:state", { ...fresh, status: "playing" } as any);
+        io.to(room.id).emit("room:state", {
+          ...fresh,
+          status: "playing",
+        } as any);
         startTurnTimer(io, fresh, room.id);
         sendYourState(io, fresh);
       }

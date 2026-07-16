@@ -1,5 +1,11 @@
 import { Card, Color, Room } from "./types";
-import { createDeck, shuffle, draw, drawInitialCard, reshuffleDiscard } from "./deck";
+import {
+  createDeck,
+  shuffle,
+  draw,
+  drawInitialCard,
+  reshuffleDiscard,
+} from "./deck";
 import { isPlayable, getInitialColor } from "./rules";
 import { resolveStack, advanceAfterStack } from "./stacking";
 import { buildRanking } from "./scoring";
@@ -23,19 +29,35 @@ export function startGame(room: Room): Room {
   const initialColor = getInitialColor(firstCard) || "red";
 
   return {
-    ...room, status: "playing", players, drawPile: afterFirst,
-    discardPile: [firstCard], currentColor: initialColor as Color,
-    currentPlayerIndex: 0, direction: 1, turnTimer: 15,
-    calledUno: {}, stackChain: null, winner: null, ranking: [], playAgainVotes: [], lastDrawnCard: {},
+    ...room,
+    status: "playing",
+    players,
+    drawPile: afterFirst,
+    discardPile: [firstCard],
+    currentColor: initialColor as Color,
+    currentPlayerIndex: 0,
+    direction: 1,
+    turnTimer: 15,
+    calledUno: {},
+    stackChain: null,
+    winner: null,
+    ranking: [],
+    playAgainVotes: [],
+    lastDrawnCard: {},
   };
 }
 
-export function playCard(room: Room, playerId: string, cardIndex: number): Room {
+export function playCard(
+  room: Room,
+  playerId: string,
+  cardIndex: number,
+): Room {
   const pIdx = room.players.findIndex((p) => p.id === playerId);
   if (pIdx === -1) throw new Error("Jogador nao encontrado");
 
   const player = room.players[pIdx];
-  if (cardIndex < 0 || cardIndex >= player.hand.length) throw new Error("Carta invalida");
+  if (cardIndex < 0 || cardIndex >= player.hand.length)
+    throw new Error("Carta invalida");
 
   const card = player.hand[cardIndex];
   const topCard = room.discardPile[room.discardPile.length - 1];
@@ -55,17 +77,28 @@ export function playCard(room: Room, playerId: string, cardIndex: number): Room 
     const newPlayer = room.players[newPIdx];
     if (cardIndex >= newPlayer.hand.length) return room;
     const newCard = newPlayer.hand[cardIndex];
-    if (!isPlayable(newCard, room.discardPile[room.discardPile.length - 1], room.currentColor)) {
+    if (
+      !isPlayable(
+        newCard,
+        room.discardPile[room.discardPile.length - 1],
+        room.currentColor,
+      )
+    ) {
       return room;
     }
     return playCard(room, playerId, cardIndex);
   }
 
-  const remainingHand = [...player.hand.slice(0, cardIndex), ...player.hand.slice(cardIndex + 1)];
+  const remainingHand = [
+    ...player.hand.slice(0, cardIndex),
+    ...player.hand.slice(cardIndex + 1),
+  ];
 
   let updated: Room = {
     ...room,
-    players: room.players.map((p, i) => i === pIdx ? { ...p, hand: remainingHand } : p),
+    players: room.players.map((p, i) =>
+      i === pIdx ? { ...p, hand: remainingHand } : p,
+    ),
     discardPile: [...room.discardPile, card],
     lastDrawnCard: { ...room.lastDrawnCard, [playerId]: null },
   };
@@ -89,23 +122,36 @@ export function playCard(room: Room, playerId: string, cardIndex: number): Room 
     }
     updated = {
       ...updated,
-      players: updated.players.map((p, i) => i === pIdx ? { ...p, hand: [...p.hand, ...cards] } : p),
+      players: updated.players.map((p, i) =>
+        i === pIdx ? { ...p, hand: [...p.hand, ...cards] } : p,
+      ),
       drawPile: pile,
       discardPile: pileDiscard,
     };
   }
 
   if (remainingHand.length !== 1) {
-    updated = { ...updated, calledUno: { ...updated.calledUno, [playerId]: false } };
+    updated = {
+      ...updated,
+      calledUno: { ...updated.calledUno, [playerId]: false },
+    };
   }
 
   if (updated.players[pIdx].hand.length === 0) return checkWin(updated);
 
-  const isSpecial = card.type === "skip" || card.type === "reverse" || card.type === "draw2" || card.type === "wild" || card.type === "wild4";
+  const isSpecial =
+    card.type === "skip" ||
+    card.type === "reverse" ||
+    card.type === "draw2" ||
+    card.type === "wild" ||
+    card.type === "wild4";
 
   if (isSpecial) {
     if (updated.stackChain && card.type === updated.stackChain.type) {
-      updated = { ...updated, stackChain: { type: card.type, count: updated.stackChain.count + 1 } };
+      updated = {
+        ...updated,
+        stackChain: { type: card.type, count: updated.stackChain.count + 1 },
+      };
     } else {
       updated = { ...updated, stackChain: { type: card.type, count: 1 } };
     }
@@ -128,12 +174,19 @@ export function drawCard(room: Room, playerId: string): Room {
   }
   const { card, remaining } = draw(pile);
 
+  const newHand = [...room.players[pIdx].hand, card];
+
+  // Sempre reseta o UNO após comprar para permitir chamar novamente
+  // (jogador pode ter tido UNO antes e agora tem 2 cartas novamente)
   return {
     ...room,
-    players: room.players.map((p, i) => i === pIdx ? { ...p, hand: [...p.hand, card] } : p),
+    players: room.players.map((p, i) =>
+      i === pIdx ? { ...p, hand: newHand } : p,
+    ),
     drawPile: remaining,
     discardPile: pileDiscard,
     lastDrawnCard: { ...room.lastDrawnCard, [playerId]: card },
+    calledUno: { ...room.calledUno, [playerId]: false },
   };
 }
 
@@ -145,19 +198,32 @@ export function playDrawnCard(room: Room, playerId: string): Room {
   if (!drawnCard) throw new Error("Nenhuma carta comprada");
 
   const topCard = room.discardPile[room.discardPile.length - 1];
-  if (!isPlayable(drawnCard, topCard, room.currentColor)) throw new Error("Carta comprada nao pode ser jogada");
+  if (!isPlayable(drawnCard, topCard, room.currentColor))
+    throw new Error("Carta comprada nao pode ser jogada");
 
   const player = room.players[pIdx];
   const drawnIdx = player.hand.length - 1;
 
   return playCard(
-    { ...room, players: room.players.map((p, i) => i === pIdx ? { ...p, hand: [...p.hand.slice(0, drawnIdx), drawnCard] } : p), lastDrawnCard: { ...room.lastDrawnCard, [playerId]: null } },
-    playerId, drawnIdx
+    {
+      ...room,
+      players: room.players.map((p, i) =>
+        i === pIdx
+          ? { ...p, hand: [...p.hand.slice(0, drawnIdx), drawnCard] }
+          : p,
+      ),
+      lastDrawnCard: { ...room.lastDrawnCard, [playerId]: null },
+    },
+    playerId,
+    drawnIdx,
   );
 }
 
 export function passTurn(room: Room, playerId: string): Room {
-  return advanceAfterStack({ ...room, lastDrawnCard: { ...room.lastDrawnCard, [playerId]: null } });
+  return advanceAfterStack({
+    ...room,
+    lastDrawnCard: { ...room.lastDrawnCard, [playerId]: null },
+  });
 }
 
 export function callUno(room: Room, playerId: string): Room {

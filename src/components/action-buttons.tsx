@@ -1,29 +1,53 @@
 "use client";
 import { motion, AnimatePresence } from "motion/react";
 import { Play, Download, SkipForward, Megaphone } from "lucide-react";
+import { animation, touchTarget, spacing } from "@/styles/design-tokens";
 
 interface ActionButtonsProps {
-  canPlay: boolean; canStack: boolean; hasSelectedCard: boolean;
-  hasDrawn: boolean; drawnPlayable: boolean; calledUno: boolean;
-  handSize: number; isMyTurn: boolean;
-  onPlay: () => void; onDraw: () => void; onPlayDrawn: () => void;
-  onPass: () => void; onUno: () => void;
+  canPlay: boolean;
+  canStack: boolean;
+  hasSelectedCard: boolean;
+  hasDrawn: boolean;
+  drawnPlayable: boolean;
+  calledUno: boolean;
+  handSize: number;
+  isMyTurn: boolean;
+  onPlay: () => void;
+  onDraw: () => void;
+  onPlayDrawn: () => void;
+  onPass: () => void;
+  onUno: () => void;
 }
 
-const btnBase = "px-5 py-3 rounded-xl font-black text-base transition-colors duration-200 flex items-center gap-2";
+// Touch target: min 44px height (Apple HIG)
+const btnBase = `
+  px-6 py-3.5 rounded-xl font-black text-base
+  flex items-center justify-center gap-2
+  min-h-[44px]
+  transition-all duration-200
+  active:scale-95
+`;
 
 export default function ActionButtons(props: ActionButtonsProps) {
-  if (!props.isMyTurn) return (
-    <div className="flex justify-center py-4">
-      <p className="text-text-muted text-sm animate-pulse">Aguardando seu turno...</p>
-    </div>
-  );
+  if (!props.isMyTurn)
+    return (
+      <div className="flex justify-center py-4">
+        <p className="text-text-muted text-sm animate-pulse">
+          Aguardando seu turno...
+        </p>
+      </div>
+    );
 
-  const showUno = props.handSize === 2 && !props.calledUno;
-  const canPlayCard = (props.canPlay || props.canStack) && props.hasSelectedCard;
+  // UNO só aparece se tem 2 cartas E pelo menos uma é jogável
+  const showUno =
+    props.handSize === 2 &&
+    !props.calledUno &&
+    (props.canPlay || props.canStack);
+  const canPlayCard =
+    (props.canPlay || props.canStack) && props.hasSelectedCard;
 
   return (
-    <div className="flex justify-center gap-3 py-3 flex-wrap">
+    <div className="flex justify-center gap-3 py-4 flex-wrap px-4">
       <AnimatePresence>
         {showUno && (
           <motion.button
@@ -32,18 +56,30 @@ export default function ActionButtons(props: ActionButtonsProps) {
             exit={{ scale: 0, opacity: 0 }}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 450, damping: 18, mass: 0.8 }}
+            transition={{
+              type: "spring",
+              stiffness: 450,
+              damping: 18,
+              mass: 0.8,
+            }}
             onClick={props.onUno}
             className={`${btnBase} bg-uno-yellow text-black shadow-lg shadow-uno-yellow/30`}
           >
-            <Megaphone size={18} />UNO!
+            <Megaphone size={18} />
+            UNO!
           </motion.button>
         )}
       </AnimatePresence>
 
       <AnimatePresence mode="wait">
         {!props.hasDrawn ? (
-          <motion.div key="pre-draw" className="flex gap-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div
+            key="pre-draw"
+            className="flex gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
             {canPlayCard ? (
               <motion.button
                 onClick={props.onPlay}
@@ -52,7 +88,8 @@ export default function ActionButtons(props: ActionButtonsProps) {
                 transition={{ type: "spring", stiffness: 400, damping: 18 }}
                 className={`${btnBase} bg-uno-green text-white hover:bg-green-600 shadow-lg shadow-green-500/30`}
               >
-                <Play size={18} />Jogar
+                <Play size={18} />
+                Jogar
               </motion.button>
             ) : props.canStack ? (
               <motion.button
@@ -60,7 +97,8 @@ export default function ActionButtons(props: ActionButtonsProps) {
                 disabled
                 className={`${btnBase} bg-surface-raised text-text-muted border border-border cursor-not-allowed`}
               >
-                <Play size={18} />Jogar
+                <Play size={18} />
+                Jogar
               </motion.button>
             ) : null}
             <motion.button
@@ -69,19 +107,28 @@ export default function ActionButtons(props: ActionButtonsProps) {
               whileTap={{ scale: 0.93 }}
               className={`${btnBase} bg-uno-blue text-white hover:bg-blue-600 shadow-lg shadow-blue-500/30`}
             >
-              <Download size={18} />Comprar
+              <Download size={18} />
+              Comprar
             </motion.button>
           </motion.div>
         ) : (
-          <motion.div key="post-draw" className="flex gap-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            {props.drawnPlayable ? (
+          <motion.div
+            key="post-draw"
+            className="flex gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {canPlayCard ? (
               <motion.button
-                onClick={props.onPlayDrawn}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.93 }}
+                onClick={props.onPlay}
+                whileHover={{ scale: 1.06 }}
+                whileTap={{ scale: 0.92 }}
+                transition={{ type: "spring", stiffness: 400, damping: 18 }}
                 className={`${btnBase} bg-uno-green text-white hover:bg-green-600 shadow-lg shadow-green-500/30`}
               >
-                <Play size={18} />Jogar esta carta
+                <Play size={18} />
+                Jogar
               </motion.button>
             ) : null}
             <motion.button
@@ -90,7 +137,8 @@ export default function ActionButtons(props: ActionButtonsProps) {
               whileTap={{ scale: 0.93 }}
               className={`${btnBase} bg-surface-raised text-text-primary hover:bg-surface-card border-2 border-border`}
             >
-              <SkipForward size={18} />Passar
+              <SkipForward size={18} />
+              Passar
             </motion.button>
           </motion.div>
         )}

@@ -13,7 +13,9 @@ export default function GameResult() {
 
   const connectedCount = room?.players.filter((p) => p.connected).length ?? 0;
   const voteCount = room?.playAgainVotes?.length ?? 0;
-  const hasVoted = myPlayerId ? (room?.playAgainVotes?.includes(myPlayerId) ?? false) : false;
+  const hasVoted = myPlayerId
+    ? (room?.playAgainVotes?.includes(myPlayerId) ?? false)
+    : false;
 
   return (
     <AnimatePresence>
@@ -28,14 +30,24 @@ export default function GameResult() {
           <motion.div
             initial={{ scale: 0.5, opacity: 0, y: 60 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 25, delay: 0.2 }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 25,
+              delay: 0.2,
+            }}
             className="bg-surface-card rounded-2xl p-8 space-y-6 border border-border max-w-sm w-full"
           >
             <div className="text-center space-y-2">
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
-                transition={{ type: "spring", stiffness: 400, damping: 15, delay: 0.5 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 15,
+                  delay: 0.5,
+                }}
               >
                 <Crown size={48} className="mx-auto text-uno-yellow" />
               </motion.div>
@@ -55,14 +67,23 @@ export default function GameResult() {
                   key={p.id}
                   initial={{ opacity: 0, x: -40 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.8 + i * 0.15, type: "spring", stiffness: 400, damping: 25 }}
+                  transition={{
+                    delay: 0.8 + i * 0.15,
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 25,
+                  }}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl bg-surface-raised border border-border"
                 >
                   <span className={`text-lg ${medals[i] || "text-text-muted"}`}>
                     {i === 0 ? <Crown size={20} /> : <Medal size={20} />}
                   </span>
-                  <span className="flex-1 text-text-primary font-medium">{p.name}</span>
-                  <span className="text-sm text-text-muted">{p.cardCount} cartas</span>
+                  <span className="flex-1 text-text-primary font-medium">
+                    {p.name}
+                  </span>
+                  <span className="text-sm text-text-muted">
+                    {p.cardCount} CARTAS
+                  </span>
                 </motion.div>
               ))}
             </div>
@@ -73,7 +94,9 @@ export default function GameResult() {
               transition={{ delay: 1.2 }}
               whileHover={hasVoted ? {} : { scale: 1.03 }}
               whileTap={hasVoted ? {} : { scale: 0.95 }}
-              onClick={() => { if (myPlayerId) getSocket().emit("game:playAgain"); }}
+              onClick={() => {
+                if (myPlayerId) getSocket().emit("game:playAgain");
+              }}
               disabled={hasVoted}
               className={`w-full py-3 rounded-xl font-black text-lg transition-colors flex items-center justify-center gap-2 ${
                 hasVoted
@@ -82,7 +105,9 @@ export default function GameResult() {
               }`}
             >
               <RotateCcw size={18} />
-              {hasVoted ? `Aguardando (${voteCount}/${connectedCount})` : "Jogar Novamente"}
+              {hasVoted
+                ? `Aguardando (${voteCount}/${connectedCount})`
+                : "Jogar Novamente"}
             </motion.button>
 
             {room && room.playAgainVotes && room.playAgainVotes.length > 0 && (
@@ -90,7 +115,10 @@ export default function GameResult() {
                 {room.playAgainVotes.map((voterId) => {
                   const voter = room.players.find((p) => p.id === voterId);
                   return voter ? (
-                    <span key={voterId} className="text-[10px] px-2 py-0.5 rounded-full bg-brand/10 text-brand border border-brand/20">
+                    <span
+                      key={voterId}
+                      className="text-[10px] px-2 py-0.5 rounded-full bg-brand/10 text-brand border border-brand/20"
+                    >
                       {voter.name} ✓
                     </span>
                   ) : null;
