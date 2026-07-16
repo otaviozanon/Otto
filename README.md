@@ -6,7 +6,7 @@
 <p align="center"><strong>Uno Multiplayer</strong> — Jogo de cartas em tempo real</p>
 
 <p align="center">
-  <a href="http://localhost:3000"><strong>🎮 JOGAR</strong></a>
+  <a href="https://ottogame.onrender.com/"><strong>🎮 JOGAR</strong></a>
 </p>
 
 <p align="center">
@@ -56,19 +56,6 @@ Cartas do mesmo tipo podem ser empilhadas:
 ### Timer
 
 **15 segundos** no primeiro movimento, **10 segundos** para jogadas extras do mesmo jogador.
-
----
-
-## Como Rodar
-
-```bash
-npm install
-npm run dev
-```
-
-Abra `http://localhost:3000` em duas abas. Crie uma sala em uma, entre com o codigo na outra.
-
----
 
 <p align="center">
   Feito com ♥️
