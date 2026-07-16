@@ -67,8 +67,8 @@ const UnoCard = memo(function UnoCard({ card, onClick, selected, playable, size 
       initial={isNew ? { opacity: 0, y: 40, scale: 0.3, rotate: -15 } : false}
       animate={{
         opacity: !onClick ? 1 : playable ? 1 : 0.35,
-        scale: selected ? 1.1 : 1,
-        y: selected ? -16 : 0,
+        scale: selected ? 1.08 : 1,
+        y: selected ? -14 : 0,
         filter: !onClick ? "saturate(1)" : playable ? "saturate(1)" : "saturate(0.2)",
         boxShadow: selected
           ? "0 12px 30px rgba(0,0,0,0.5)"
@@ -76,15 +76,15 @@ const UnoCard = memo(function UnoCard({ card, onClick, selected, playable, size 
             ? "0 2px 8px rgba(0,0,0,0.3)"
             : "0 1px 3px rgba(0,0,0,0.2)",
       }}
-      exit={{ opacity: 0, y: -40, scale: 0.5, transition: { duration: 0.2 } }}
-      whileHover={playable ? { scale: 1.08, y: -12, boxShadow: "0 8px 25px rgba(0,0,0,0.4)" } : {}}
-      whileTap={playable ? { scale: 0.92, transition: { duration: 0.1 } } : {}}
+      exit={{ opacity: 0, y: -20, scale: 0.8, transition: { duration: 0.15 } }}
+      whileHover={playable ? { scale: 1.06, y: -8, boxShadow: "0 8px 25px rgba(0,0,0,0.4)", transition: { type: "spring", stiffness: 350, damping: 20 } } : {}}
+      whileTap={playable ? { scale: 0.94, transition: { duration: 0.08 } } : {}}
       transition={{
         type: "spring",
-        stiffness: 400,
-        damping: 25,
-        mass: 0.8,
-        delay: index * 0.03,
+        stiffness: 300,
+        damping: 30,
+        mass: 0.9,
+        delay: index * 0.025,
       }}
       className={`
         ${sizeClasses[size]} relative
