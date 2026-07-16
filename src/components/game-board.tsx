@@ -29,20 +29,25 @@ export default function GameBoard() {
   const [timer, setTimer] = useState(15);
   const [showTurnBanner, setShowTurnBanner] = useState(false);
   const prevTurnRef = useRef<string | null>(null);
+  const bannerTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     if (!gameState) return;
-    if (gameState.currentPlayerId === myPlayerId && prevTurnRef.current !== myPlayerId) {
+    const isMyTurnNow = gameState.currentPlayerId === myPlayerId;
+    if (isMyTurnNow && prevTurnRef.current !== myPlayerId) {
       setShowTurnBanner(true);
-      const t = setTimeout(() => setShowTurnBanner(false), 2000);
+      clearTimeout(bannerTimerRef.current);
+      bannerTimerRef.current = setTimeout(() => setShowTurnBanner(false), 2500);
       prevTurnRef.current = myPlayerId as string;
-      return () => clearTimeout(t);
-    }
-    if (gameState.currentPlayerId !== myPlayerId) {
+    } else if (!isMyTurnNow) {
       setShowTurnBanner(false);
     }
     prevTurnRef.current = gameState.currentPlayerId;
   }, [gameState?.currentPlayerId, myPlayerId]);
+
+  useEffect(() => {
+    return () => { if (bannerTimerRef.current) clearTimeout(bannerTimerRef.current); };
+  }, []);
 
   useEffect(() => {
     if (!gameState) return;
