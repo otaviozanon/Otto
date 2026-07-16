@@ -112,7 +112,7 @@ export default function GameBoard() {
         )}
       </AnimatePresence>
 
-      <div className="flex-1 flex flex-col items-center justify-center gap-4 p-4 pt-2"> 
+      <div className="flex-1 flex flex-col items-center justify-center gap-3 p-4 pt-1 pb-0"> 
         <div className="flex items-center gap-8">
           <div className="flex flex-col items-center gap-1.5">
             <div className="relative w-[70px] h-[98px]">
@@ -187,21 +187,22 @@ export default function GameBoard() {
           hasDrawn={hasDrawn} drawnPlayable={gameState.drawnCardPlayable} calledUno={gameState.calledUno}
           handSize={gameState.hand.length} isMyTurn={isMyTurn}
           onPlay={handlePlay} onDraw={handleDraw} onPlayDrawn={handlePlayDrawn} onPass={handlePass} onUno={handleUno} />
-
-        <AnimatePresence>
-          {showTurnBanner && (
-            <motion.div
-              initial={{ opacity: 0, y: 10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ type: "spring", stiffness: 500, damping: 25 }}
-              className="text-center"
-            >
-              <span className="text-[11px] font-bold text-uno-yellow tracking-[0.2em] uppercase">◆ Seu Turno</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
+
+      <AnimatePresence>
+        {showTurnBanner && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
+          >
+            <div className="px-5 py-2 rounded-full bg-uno-yellow/15 border border-uno-yellow/30 backdrop-blur-sm">
+              <span className="text-xs font-bold text-uno-yellow tracking-[0.2em] uppercase">◆ Seu Turno</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <CardHand cards={gameState.hand} selectedIndex={selectedIndex} onSelectCard={setSelectedIndex}
         playableCards={playableCards} disabled={!isMyTurn} cardCount={myCardCount} isDrawing={hasDrawn} />
