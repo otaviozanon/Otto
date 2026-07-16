@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --color-surface: #0a0a0a;
-  --color-surface-raised: #111111;
-  --color-surface-overlay: #181818;
-  --color-surface-card: #1e1e1e;
+  --color-surface: #0e0e0e;
+  --color-surface-raised: #1a1a1a;
+  --color-surface-overlay: #222222;
+  --color-surface-card: #282828;
   --color-brand: #f59e0b;
   --color-brand-light: #fbbf24;
   --color-brand-dark: #d97706;
@@ -43,7 +43,7 @@
 
 @layer base {
   body {
-    background: radial-gradient(ellipse 80% 60% at 50% 0%, #1a1a1a 0%, #0a0a0a 60%);
+    background: radial-gradient(ellipse 60% 60% at 50% 50%, #2a2a2a 0%, #141414 50%, #080808 100%);
     color: var(--color-text-primary);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
