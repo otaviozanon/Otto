@@ -13,7 +13,8 @@
   <img src="https://img.shields.io/badge/jogadores-2%20a%2015-red" />
   <img src="https://img.shields.io/badge/cartas-108-blue" />
   <img src="https://img.shields.io/badge/multiplayer-online-green" />
-  <img src="https://img.shields.io/badge/timer-20s-orange" />
+  <img src="https://img.shields.io/badge/timer-15s%20%2B%2010s-orange" />
+  <img src="https://img.shields.io/badge/testes-1805-green" />
 </p>
 
 ---
@@ -54,7 +55,7 @@ Cartas do mesmo tipo podem ser empilhadas:
 
 ### Timer
 
-**20 segundos** por turno. Se o tempo acabar, compra 1 carta automatico e passa a vez.
+**15 segundos** no primeiro movimento, **10 segundos** para jogadas extras do mesmo jogador.
 
 ---
 
