@@ -3,7 +3,7 @@ import { Card, Color } from "./types";
 export function isPlayable(card: Card, topCard: Card, currentColor: Color): boolean {
   if (card.type === "wild" || card.type === "wild4") return true;
   if ("color" in card && card.color === currentColor) return true;
-  if (card.type === topCard.type) return true;
+  if (card.type !== "number" && topCard.type !== "number" && card.type === topCard.type) return true;
   if (card.type === "number" && topCard.type === "number" && card.value === topCard.value) return true;
   return false;
 }

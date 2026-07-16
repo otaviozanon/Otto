@@ -41,12 +41,12 @@ export function resolveStack(room: Room): Room {
   if (chain.type === "reverse") {
     const newDir = (updated.direction * -1) as 1 | -1;
     updated = { ...updated, direction: newDir };
-    const isTwo = updated.players.length === 2;
+    if (updated.players.length === 2) {
+      return { ...updated, stackChain: null };
+    }
     for (let i = 0; i < chain.count; i++) {
-      if (isTwo) updated = advanceAfterStack(updated);
       updated = advanceAfterStack(updated);
     }
-    if (isTwo) updated = advanceAfterStack({ ...updated, direction: (newDir * -1) as 1 | -1 });
     return { ...updated, stackChain: null, direction: newDir };
   }
 
