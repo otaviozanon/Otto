@@ -2,7 +2,7 @@ import { Server as SocketIOServer, Socket } from "socket.io";
 import { createRoom, joinRoom, removePlayer, setPlayerDisconnected, isPlayerTurn } from "@/game-engine/room";
 import { startGame, playCard, drawCard, playDrawnCard, passTurn, callUno, chooseColor, checkWin, processTurnTimeout } from "@/game-engine/game";
 import { resolveStack } from "@/game-engine/stacking";
-import { requiresColorChoice } from "@/game-engine/rules";
+import { isPlayable, requiresColorChoice } from "@/game-engine/rules";
 import { getRoom, setRoom, deleteRoom, mapSocketToPlayer, removeSocketMapping, getRoomBySocketId, getPlayerIdBySocketId, getSocketId } from "./rooms";
 import { PlayerGameState } from "@/game-engine/types";
 
@@ -47,6 +47,7 @@ export function setupSocket(io: SocketIOServer): void {
         const started = startGame(room);
         setRoom(room.id, started);
         io.to(room.id).emit("room:state", { ...started, status: "playing" });
+        startTurnTimer(io, started, room.id);
         sendYourState(io, started);
       } catch (e: any) { socket.emit("error", { message: e.message }); }
     });
@@ -186,20 +187,19 @@ function sendYourState(io: SocketIOServer, room: any) {
   for (const player of room.players) {
     const sockId = getSocketId(player.id);
     if (!sockId) continue;
-    const hand = player.hand;
-    const canPlay = hand.some((c: any) => c.type === "wild" || c.type === "wild4" || ("color" in c && (c.color === room.currentColor || c.type === topCard.type || (c.type === "number" && topCard.type === "number" && c.value === topCard.value))));
     const isMyTurn = player.id === currentPlayer?.id;
+    const canPlay = isMyTurn && player.hand.some((c: any) => isPlayable(c, topCard, room.currentColor));
     const drawnCard = room.lastDrawnCard[player.id];
-    const canStack = isMyTurn && room.stackChain ? hand.some((c: any) => c.type === room.stackChain.type) : false;
+    const canStack = isMyTurn && room.stackChain ? player.hand.some((c: any) => c.type === room.stackChain.type) : false;
     const state: PlayerGameState = {
-      hand, currentCard: topCard, currentColor: room.currentColor,
+      hand: player.hand, currentCard: topCard, currentColor: room.currentColor,
       drawPileCount: room.drawPile.length, direction: room.direction,
       players: room.players.map((p: any) => ({ id: p.id, name: p.name, cardCount: p.hand.length })),
       currentPlayerId: currentPlayer?.id || "", turnTimer: isMyTurn ? TURN_TIMEOUT / 1000 : 0,
       calledUno: room.calledUno[player.id] || false,
-      canPlay: isMyTurn && canPlay, canStack,
+      canPlay, canStack,
       isDrawing: isMyTurn && drawnCard != null,
-      drawnCardPlayable: isMyTurn && drawnCard != null ? (drawnCard.type === "wild" || drawnCard.type === "wild4" || ("color" in drawnCard && (drawnCard.color === room.currentColor || drawnCard.type === topCard.type || (drawnCard.type === "number" && topCard.type === "number" && drawnCard.value === topCard.value)))) : false,
+      drawnCardPlayable: isMyTurn && drawnCard != null ? isPlayable(drawnCard, topCard, room.currentColor) : false,
     };
     io.to(sockId).emit("game:your-state", state);
   }

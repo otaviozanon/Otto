@@ -41,7 +41,7 @@ export default function GameBoard() {
     if (card.type === "wild" || card.type === "wild4") return true;
     const top = gameState.currentCard;
     if ("color" in card && card.color === gameState.currentColor) return true;
-    if (card.type === top.type) return true;
+    if (card.type !== "number" && top.type !== "number" && card.type === top.type) return true;
     if (card.type === "number" && top.type === "number" && card.value === top.value) return true;
     return false;
   });
