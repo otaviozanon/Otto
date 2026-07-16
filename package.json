@@ -10,7 +10,7 @@
     "dev": "tsx server.mts",
     "build": "next build --turbo",
     "start": "NODE_ENV=production tsx server.mts",
-    "test": "vitest run",
+    "test": "tsc --noEmit && vitest run",
     "test:watch": "vitest",
     "lint": "next lint"
   },
