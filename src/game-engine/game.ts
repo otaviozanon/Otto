@@ -95,6 +95,10 @@ export function playCard(room: Room, playerId: string, cardIndex: number): Room 
     };
   }
 
+  if (remainingHand.length !== 1) {
+    updated = { ...updated, calledUno: { ...updated.calledUno, [playerId]: false } };
+  }
+
   if (updated.players[pIdx].hand.length === 0) return checkWin(updated);
 
   const isSpecial = card.type === "skip" || card.type === "reverse" || card.type === "draw2" || card.type === "wild" || card.type === "wild4";
