@@ -17,7 +17,7 @@ const RULES_CONTENT = (
     <p><strong className="text-text-primary">Empilhamento:</strong> Cartas do mesmo tipo empilham (+2/+2, +4/+4, etc).</p>
     <p><strong className="text-text-primary">UNO:</strong> Com 2 cartas, declare UNO antes de jogar a penultima. Sem declarar: +2 cartas.</p>
     <p><strong className="text-text-primary">Comprar:</strong> Sem carta jogavel, compre do monte. Se servir, pode joga-la.</p>
-    <p><strong className="text-text-primary">Timer:</strong> 20s por turno. Estourou = compra 1 e passa.</p>
+    <p><strong className="text-text-primary">Timer:</strong> 15s por turno. Apos jogar, 10s para jogadas extras. Estourou = compra 1 e passa.</p>
   </div>
 );
 

@@ -6,10 +6,13 @@ import { isPlayable, requiresColorChoice } from "@/game-engine/rules";
 import { getRoom, setRoom, deleteRoom, mapSocketToPlayer, removeSocketMapping, getRoomBySocketId, getPlayerIdBySocketId, getSocketId } from "./rooms";
 import { Room, PlayerGameState, PlayerPublic, Card, Color } from "@/game-engine/types";
 
-const TURN_TIMEOUT = 20000;
+const TURN_TIMEOUT = 15000;
+const SUBSEQUENT_TIMEOUT = 10000;
 
 const roomTimers = new Map<string, ReturnType<typeof setTimeout>>();
 const timerStartedAt = new Map<string, number>();
+const turnActionCount = new Map<string, number>();
+const lastPlayerPerRoom = new Map<string, string>();
 
 function clearRoomTimer(roomId: string): void {
   const t = roomTimers.get(roomId);
@@ -20,8 +23,17 @@ function clearRoomTimer(roomId: string): void {
 
 function startTurnTimer(io: SocketIOServer, room: Room, roomId: string): void {
   clearRoomTimer(roomId);
+  const currentId = room.players[room.currentPlayerIndex]?.id;
+  if (currentId && lastPlayerPerRoom.get(roomId) !== currentId) {
+    turnActionCount.set(roomId, 0);
+    lastPlayerPerRoom.set(roomId, currentId);
+  }
+  const count = turnActionCount.get(roomId) || 0;
+  const duration = count === 0 ? TURN_TIMEOUT : SUBSEQUENT_TIMEOUT;
+  turnActionCount.set(roomId, count + 1);
   timerStartedAt.set(roomId, Date.now());
   const timer = setTimeout(() => {
+    turnActionCount.set(roomId, 0);
     const r = getRoom(roomId);
     if (!r || r.status !== "playing") return;
     const cp = r.players[r.currentPlayerIndex];
@@ -30,7 +42,7 @@ function startTurnTimer(io: SocketIOServer, room: Room, roomId: string): void {
     setRoom(roomId, updated);
     sendYourState(io, updated);
     startTurnTimer(io, updated, roomId);
-  }, TURN_TIMEOUT);
+  }, duration);
   roomTimers.set(roomId, timer);
 }
 
