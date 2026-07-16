@@ -112,16 +112,18 @@ export default function GameBoard() {
         )}
       </AnimatePresence>
 
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         <motion.div
-          key={showTurnBanner ? "on" : "off"}
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: showTurnBanner ? 1 : 0, height: showTurnBanner ? "auto" : 0 }}
-          className="overflow-hidden flex justify-center"
+          key={showTurnBanner ? "banner" : "empty"}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: showTurnBanner ? 1 : 0 }}
+          className="h-7 flex items-center justify-center"
         >
-          <div className="px-4 py-1.5 mb-1 rounded-full bg-uno-yellow/10 border border-uno-yellow/20">
-            <span className="text-[11px] font-bold text-uno-yellow tracking-[0.2em] uppercase">◆ Seu Turno</span>
-          </div>
+          {showTurnBanner && (
+            <div className="px-4 py-0.5 rounded-full bg-uno-yellow/10 border border-uno-yellow/20">
+              <span className="text-[11px] font-bold text-uno-yellow tracking-[0.2em] uppercase">◆ Seu Turno</span>
+            </div>
+          )}
         </motion.div>
       </AnimatePresence>
 
