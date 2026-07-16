@@ -115,10 +115,10 @@ export default function GameBoard() {
       <div className="flex-1 flex flex-col items-center justify-center gap-4 p-4 pt-2"> 
         <div className="flex items-center gap-8">
           <div className="flex flex-col items-center gap-1.5">
-            <div className="relative w-[62px] h-[88px]">
+            <div className="relative w-[70px] h-[98px]">
               {Array.from({ length: Math.min(gameState.drawPileCount, 3) }).map((_, i) => (
                 <div key={i}
-                  className="absolute w-[62px] h-[88px] rounded-[8px] bg-gradient-to-b from-gray-800 to-gray-900 border border-white/10 shadow-md"
+                  className="absolute w-[70px] h-[98px] rounded-[8px] bg-gradient-to-b from-gray-800 to-gray-900 border border-white/10 shadow-md"
                   style={{
                     top: `${-i * 2}px`,
                     left: `${-i * 2}px`,
@@ -127,7 +127,7 @@ export default function GameBoard() {
                   }}
                 />
               ))}
-              <div className="absolute inset-0 w-[62px] h-[88px] rounded-[8px] bg-gradient-to-b from-uno-red/20 to-uno-red/5 border border-uno-red/30 flex items-center justify-center z-10 shadow-lg">
+              <div className="absolute inset-0 w-[70px] h-[98px] rounded-[8px] bg-gradient-to-b from-uno-red/20 to-uno-red/5 border border-uno-red/30 flex items-center justify-center z-10 shadow-lg">
                 <span className="text-lg font-black text-white/60">{gameState.drawPileCount}</span>
               </div>
             </div>
