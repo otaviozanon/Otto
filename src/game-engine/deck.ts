@@ -41,11 +41,11 @@ export function draw(deck: Card[]): { card: Card; remaining: Card[] } {
   return { card, remaining };
 }
 
-export function reshuffleDiscard(drawPile: Card[], discardPile: Card[]): Card[] {
-  if (drawPile.length > 0) return drawPile;
+export function reshuffleDiscard(drawPile: Card[], discardPile: Card[]): { drawPile: Card[]; discardPile: Card[] } {
+  if (drawPile.length > 0) return { drawPile, discardPile };
   const toShuffle = discardPile.slice(0, -1);
-  if (toShuffle.length === 0) return drawPile;
-  return shuffle(toShuffle);
+  if (toShuffle.length === 0) return { drawPile, discardPile };
+  return { drawPile: shuffle(toShuffle), discardPile: [discardPile[discardPile.length - 1]] };
 }
 
 export function drawInitialCard(deck: Card[]): { card: Card; remaining: Card[] } {

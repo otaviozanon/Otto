@@ -1,7 +1,7 @@
 import { Server as SocketIOServer, Socket } from "socket.io";
 import { createRoom, joinRoom, removePlayer, setPlayerDisconnected, isPlayerTurn } from "@/game-engine/room";
 import { startGame, playCard, drawCard, playDrawnCard, passTurn, callUno, chooseColor, checkWin, processTurnTimeout } from "@/game-engine/game";
-import { resolveStack } from "@/game-engine/stacking";
+import { resolveStack, advanceAfterStack } from "@/game-engine/stacking";
 import { isPlayable, requiresColorChoice } from "@/game-engine/rules";
 import { getRoom, setRoom, deleteRoom, mapSocketToPlayer, removeSocketMapping, getRoomBySocketId, getPlayerIdBySocketId, getSocketId } from "./rooms";
 import { PlayerGameState } from "@/game-engine/types";
@@ -67,7 +67,12 @@ export function setupSocket(io: SocketIOServer): void {
           if (sid) io.to(sid).emit("game:color-prompt", {});
           return;
         }
-        updated = resolveStack(updated);
+        const isSpecial = ["skip", "reverse", "draw2", "wild", "wild4"].includes(updated.discardPile[updated.discardPile.length - 1].type);
+        if (!isSpecial || !updated.stackChain) {
+          if (!isSpecial) updated = resolveStack(updated);
+        } else {
+          updated = advanceAfterStack(updated);
+        }
         setRoom(room.id, updated);
         if (updated.status === "finished") { io.to(room.id).emit("game:end", { winner: toPublic(updated.winner!), ranking: updated.ranking }); return; }
         startTurnTimer(io, updated, room.id);
@@ -81,7 +86,15 @@ export function setupSocket(io: SocketIOServer): void {
       const playerId = getPlayerIdBySocketId(socket.id);
       if (!playerId || !isPlayerTurn(room, playerId)) { socket.emit("error", { message: "Nao e seu turno" }); return; }
       try {
-        const updated = drawCard(room, playerId);
+        let currentRoom = room;
+        if (room.stackChain) {
+          currentRoom = resolveStack(room);
+          setRoom(room.id, currentRoom);
+          startTurnTimer(io, currentRoom, room.id);
+          sendYourState(io, currentRoom);
+          return;
+        }
+        const updated = drawCard(currentRoom, playerId);
         setRoom(room.id, updated);
         sendYourState(io, updated);
       } catch (e: any) { socket.emit("error", { message: e.message }); }
@@ -96,8 +109,18 @@ export function setupSocket(io: SocketIOServer): void {
         clearRoomTimer(room.id);
         let updated = playDrawnCard(room, playerId);
         if (updated.status === "finished") { setRoom(room.id, updated); io.to(room.id).emit("game:end", { winner: toPublic(updated.winner!), ranking: updated.ranking }); return; }
-        if (requiresColorChoice(updated.discardPile[updated.discardPile.length - 1])) { setRoom(room.id, updated); sendYourState(io, updated); return; }
-        updated = resolveStack(updated);
+        if (requiresColorChoice(updated.discardPile[updated.discardPile.length - 1])) {
+          setRoom(room.id, updated);
+          const sid = getSocketId(updated.players[updated.currentPlayerIndex].id);
+          if (sid) io.to(sid).emit("game:color-prompt", {});
+          return;
+        }
+        const isSpecial = ["skip", "reverse", "draw2", "wild", "wild4"].includes(updated.discardPile[updated.discardPile.length - 1].type);
+        if (!isSpecial || !updated.stackChain) {
+          if (!isSpecial) updated = resolveStack(updated);
+        } else {
+          updated = advanceAfterStack(updated);
+        }
         setRoom(room.id, updated);
         if (updated.status === "finished") { io.to(room.id).emit("game:end", { winner: toPublic(updated.winner!), ranking: updated.ranking }); return; }
         startTurnTimer(io, updated, room.id);
@@ -111,7 +134,11 @@ export function setupSocket(io: SocketIOServer): void {
       const playerId = getPlayerIdBySocketId(socket.id);
       if (!playerId || !isPlayerTurn(room, playerId)) { socket.emit("error", { message: "Nao e seu turno" }); return; }
       clearRoomTimer(room.id);
-      const updated = passTurn(room, playerId);
+      let currentRoom = room;
+      if (room.stackChain) {
+        currentRoom = resolveStack(room);
+      }
+      const updated = passTurn(currentRoom, playerId);
       setRoom(room.id, updated);
       startTurnTimer(io, updated, room.id);
       sendYourState(io, updated);

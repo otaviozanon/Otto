@@ -39,45 +39,71 @@ export function playCard(room: Room, playerId: string, cardIndex: number): Room 
 
   const card = player.hand[cardIndex];
   const topCard = room.discardPile[room.discardPile.length - 1];
-  if (!isPlayable(card, topCard, room.currentColor)) throw new Error("Carta nao pode ser jogada");
 
-  const remainingHand = [...player.hand.slice(0, cardIndex), ...player.hand.slice(cardIndex + 1)];
+  const isStackingPlay = room.stackChain && card.type === room.stackChain.type;
+  if (!isStackingPlay && !isPlayable(card, topCard, room.currentColor)) {
+    throw new Error("Carta nao pode ser jogada");
+  }
+
+  let currentRoom = room;
+
+  if (room.stackChain && card.type !== room.stackChain.type) {
+    currentRoom = resolveStack(room);
+  }
+
+  const resolvedPIdx = currentRoom.players.findIndex((p) => p.id === playerId);
+  if (resolvedPIdx === -1) throw new Error("Jogador nao encontrado apos resolver pilha");
+
+  const resolvedPlayer = currentRoom.players[resolvedPIdx];
+  const resolvedCard = resolvedPlayer.hand[cardIndex];
+  if (!resolvedCard) throw new Error("Carta invalida apos resolver pilha");
+
+  const resolvedTopCard = currentRoom.discardPile[currentRoom.discardPile.length - 1];
+
+  const remainingHand = [...resolvedPlayer.hand.slice(0, cardIndex), ...resolvedPlayer.hand.slice(cardIndex + 1)];
 
   let updated: Room = {
-    ...room,
-    players: room.players.map((p, i) => i === pIdx ? { ...p, hand: remainingHand } : p),
-    discardPile: [...room.discardPile, card],
-    lastDrawnCard: { ...room.lastDrawnCard, [playerId]: null },
+    ...currentRoom,
+    players: currentRoom.players.map((p, i) => i === resolvedPIdx ? { ...p, hand: remainingHand } : p),
+    discardPile: [...currentRoom.discardPile, resolvedCard],
+    lastDrawnCard: { ...currentRoom.lastDrawnCard, [playerId]: null },
   };
 
-  const newColor = getInitialColor(card);
+  const newColor = getInitialColor(resolvedCard);
   if (newColor) updated = { ...updated, currentColor: newColor };
 
-  if (remainingHand.length === 1 && !room.calledUno[playerId]) {
+  if (remainingHand.length === 1 && !currentRoom.calledUno[playerId]) {
     const cards: Card[] = [];
     let pile = updated.drawPile;
+    let pileDiscard = updated.discardPile;
     for (let i = 0; i < 2; i++) {
-      if (pile.length === 0) pile = reshuffleDiscard(pile, updated.discardPile);
+      if (pile.length === 0) {
+        const res = reshuffleDiscard(pile, pileDiscard);
+        pile = res.drawPile;
+        pileDiscard = res.discardPile;
+      }
       const { card: c, remaining: r } = draw(pile);
       cards.push(c);
       pile = r;
     }
     updated = {
       ...updated,
-      players: updated.players.map((p, i) => i === pIdx ? { ...p, hand: [...p.hand, ...cards] } : p),
+      players: updated.players.map((p, i) => i === resolvedPIdx ? { ...p, hand: [...p.hand, ...cards] } : p),
       drawPile: pile,
+      discardPile: pileDiscard,
     };
   }
 
-  if (updated.players[pIdx].hand.length === 0) return checkWin(updated);
+  if (updated.players[resolvedPIdx].hand.length === 0) return checkWin(updated);
 
-  if (card.type === "skip" || card.type === "reverse" || card.type === "draw2" || card.type === "wild" || card.type === "wild4") {
-    if (updated.stackChain && card.type === updated.stackChain.type) {
-      updated = { ...updated, stackChain: { type: card.type, count: updated.stackChain.count + 1 } };
+  const isSpecial = resolvedCard.type === "skip" || resolvedCard.type === "reverse" || resolvedCard.type === "draw2" || resolvedCard.type === "wild" || resolvedCard.type === "wild4";
+
+  if (isSpecial) {
+    if (updated.stackChain && resolvedCard.type === updated.stackChain.type) {
+      updated = { ...updated, stackChain: { type: resolvedCard.type, count: updated.stackChain.count + 1 } };
     } else {
-      updated = { ...updated, stackChain: { type: card.type, count: 1 } };
+      updated = { ...updated, stackChain: { type: resolvedCard.type, count: 1 } };
     }
-    updated = advanceAfterStack(updated);
     return updated;
   }
 
@@ -89,13 +115,19 @@ export function drawCard(room: Room, playerId: string): Room {
   if (pIdx === -1) throw new Error("Jogador nao encontrado");
 
   let pile = room.drawPile;
-  if (pile.length === 0) pile = reshuffleDiscard(pile, room.discardPile);
+  let pileDiscard = room.discardPile;
+  if (pile.length === 0) {
+    const res = reshuffleDiscard(pile, pileDiscard);
+    pile = res.drawPile;
+    pileDiscard = res.discardPile;
+  }
   const { card, remaining } = draw(pile);
 
   return {
     ...room,
     players: room.players.map((p, i) => i === pIdx ? { ...p, hand: [...p.hand, card] } : p),
     drawPile: remaining,
+    discardPile: pileDiscard,
     lastDrawnCard: { ...room.lastDrawnCard, [playerId]: card },
   };
 }

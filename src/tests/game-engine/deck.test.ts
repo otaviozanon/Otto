@@ -29,10 +29,15 @@ describe("draw", () => {
 describe("reshuffleDiscard", () => {
   it("moves discard minus top into draw", () => {
     const deck = createDeck();
-    expect(reshuffleDiscard([], deck.slice(0, 5))).toHaveLength(4);
+    const res = reshuffleDiscard([], deck.slice(0, 5));
+    expect(res.drawPile).toHaveLength(4);
+    expect(res.discardPile).toHaveLength(1);
   });
+
   it("keeps draw when not empty", () => {
     const deck = createDeck();
-    expect(reshuffleDiscard(deck.slice(3), deck.slice(0, 3))).toHaveLength(105);
+    const res = reshuffleDiscard(deck.slice(3), deck.slice(0, 3));
+    expect(res.drawPile).toHaveLength(105);
+    expect(res.discardPile).toHaveLength(3);
   });
 });
