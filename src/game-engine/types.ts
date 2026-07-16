@@ -32,6 +32,7 @@ export interface Room {
   stackChain: { type: CardType; count: number } | null;
   winner: Player | null;
   ranking: PlayerPublic[];
+  playAgainVotes: string[];
   lastDrawnCard: Record<string, Card | null>;
 }
 

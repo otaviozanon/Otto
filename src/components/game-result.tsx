@@ -1,12 +1,19 @@
 "use client";
 import { motion, AnimatePresence } from "motion/react";
 import { useGameStore } from "@/lib/store";
-import { Crown, Medal } from "lucide-react";
+import { getSocket } from "@/lib/socket";
+import { Crown, Medal, RotateCcw } from "lucide-react";
 
 const medals = ["text-yellow-400", "text-gray-300", "text-amber-600"];
 
 export default function GameResult() {
   const result = useGameStore((s) => s.gameResult);
+  const room = useGameStore((s) => s.room);
+  const myPlayerId = useGameStore((s) => s.myPlayerId);
+
+  const connectedCount = room?.players.filter((p) => p.connected).length ?? 0;
+  const voteCount = room?.playAgainVotes?.length ?? 0;
+  const hasVoted = myPlayerId ? (room?.playAgainVotes?.includes(myPlayerId) ?? false) : false;
 
   return (
     <AnimatePresence>
@@ -64,12 +71,18 @@ export default function GameResult() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.2 }}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => window.location.reload()}
-              className="w-full py-3 rounded-xl bg-uno-red text-white font-black text-lg hover:bg-red-600 transition-colors"
+              whileHover={hasVoted ? {} : { scale: 1.03 }}
+              whileTap={hasVoted ? {} : { scale: 0.95 }}
+              onClick={() => { if (myPlayerId) getSocket().emit("game:playAgain"); }}
+              disabled={hasVoted}
+              className={`w-full py-3 rounded-xl font-black text-lg transition-colors flex items-center justify-center gap-2 ${
+                hasVoted
+                  ? "bg-surface-raised text-text-muted border border-border cursor-not-allowed"
+                  : "bg-uno-red text-white hover:bg-red-600"
+              }`}
             >
-              Nova Partida
+              <RotateCcw size={18} />
+              {hasVoted ? `Aguardando (${voteCount}/${connectedCount})` : "Jogar Novamente"}
             </motion.button>
           </motion.div>
         </motion.div>

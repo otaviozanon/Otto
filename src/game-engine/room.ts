@@ -13,7 +13,7 @@ export function createRoom(playerName: string): Room {
     id: generateCode(), host: player.id, players: [player], status: "lobby",
     drawPile: [], discardPile: [], currentColor: "red", direction: 1,
     currentPlayerIndex: 0, turnTimer: 15, calledUno: {}, stackChain: null,
-    winner: null, ranking: [], lastDrawnCard: {},
+    winner: null, ranking: [], playAgainVotes: [], lastDrawnCard: {},
   };
 }
 

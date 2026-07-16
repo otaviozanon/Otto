@@ -305,6 +305,31 @@ export function setupSocket(io: SocketIOServer): void {
       sendYourState(io, updated);
     });
 
+    socket.on("game:playAgain", () => {
+      const room = getRoomBySocketId(socket.id);
+      if (!room) return;
+      const playerId = getPlayerIdBySocketId(socket.id);
+      if (!playerId) return;
+      const votes = [...new Set([...room.playAgainVotes, playerId])];
+      const connectedCount = room.players.filter((p) => p.connected).length;
+      const updated = { ...room, playAgainVotes: votes };
+      setRoom(room.id, updated);
+      io.to(room.id).emit("room:state", updated);
+
+      if (votes.length >= connectedCount && connectedCount >= 2) {
+        clearRoomTimer(room.id);
+        const fresh = startGame({
+          ...room,
+          status: "lobby",
+          players: room.players.filter((p) => p.connected).map((p) => ({ ...p, hand: [] })),
+        });
+        setRoom(room.id, fresh);
+        io.to(room.id).emit("room:state", { ...fresh, status: "playing" } as any);
+        startTurnTimer(io, fresh, room.id);
+        sendYourState(io, fresh);
+      }
+    });
+
     socket.on("disconnect", () => {
       const mapping = removeSocketMapping(socket.id);
       if (!mapping) return;

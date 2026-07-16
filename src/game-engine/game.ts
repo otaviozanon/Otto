@@ -26,7 +26,7 @@ export function startGame(room: Room): Room {
     ...room, status: "playing", players, drawPile: afterFirst,
     discardPile: [firstCard], currentColor: initialColor as Color,
     currentPlayerIndex: 0, direction: 1, turnTimer: 15,
-    calledUno: {}, stackChain: null, winner: null, ranking: [], lastDrawnCard: {},
+    calledUno: {}, stackChain: null, winner: null, ranking: [], playAgainVotes: [], lastDrawnCard: {},
   };
 }
 

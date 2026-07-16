@@ -162,6 +162,11 @@ export default function GameBoard() {
 
         <div className="text-center text-xs text-text-muted">
           Suas cartas: <span className="text-text-primary font-bold">{myCardCount}</span>
+          {hasDrawn && gameState.hand.length > 0 && (
+            <span className="ml-3 text-uno-yellow font-medium">
+              ◆ Carta comprada: última da mão
+            </span>
+          )}
         </div>
 
         <ActionButtons canPlay={gameState.canPlay} canStack={gameState.canStack} hasSelectedCard={selectedIndex != null}
