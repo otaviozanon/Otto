@@ -72,32 +72,27 @@ export default function ActionButtons(props: ActionButtonsProps) {
               <Download size={18} />Comprar
             </motion.button>
           </motion.div>
-        ) : props.drawnPlayable ? (
-          <motion.button
-            key="play-drawn"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.93 }}
-            onClick={props.onPlayDrawn}
-            className={`${btnBase} bg-uno-green text-white hover:bg-green-600 shadow-lg shadow-green-500/30`}
-          >
-            <Play size={18} />Jogar esta carta
-          </motion.button>
         ) : (
-          <motion.button
-            key="pass"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.93 }}
-            onClick={props.onPass}
-            className={`${btnBase} bg-surface-raised text-text-primary hover:bg-surface-card border-2 border-border`}
-          >
-            <SkipForward size={18} />Passar
-          </motion.button>
+          <motion.div key="post-draw" className="flex gap-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            {props.drawnPlayable ? (
+              <motion.button
+                onClick={props.onPlayDrawn}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.93 }}
+                className={`${btnBase} bg-uno-green text-white hover:bg-green-600 shadow-lg shadow-green-500/30`}
+              >
+                <Play size={18} />Jogar esta carta
+              </motion.button>
+            ) : null}
+            <motion.button
+              onClick={props.onPass}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.93 }}
+              className={`${btnBase} bg-surface-raised text-text-primary hover:bg-surface-card border-2 border-border`}
+            >
+              <SkipForward size={18} />Passar
+            </motion.button>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
