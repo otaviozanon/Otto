@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "motion/react";
 import { useGameStore } from "@/lib/store";
 import { getSocket } from "@/lib/socket";
 import Card from "./card";
@@ -77,12 +78,20 @@ export default function GameBoard() {
     <div className="min-h-dvh flex flex-col">
       <PlayerBar players={gameState.players} currentPlayerId={gameState.currentPlayerId} myPlayerId={myPlayerId!} direction={gameState.direction} />
 
-      {room?.stackChain && (
-        <div className="mx-4 mt-3 px-4 py-2 rounded-xl bg-uno-red/10 border border-uno-red/30 flex items-center justify-center gap-2 text-sm text-uno-red font-semibold animate-slide-up">
-          <AlertTriangle size={16} />
-          Empilhamento ativo: {STACK_LABELS[room.stackChain.type] || room.stackChain.type} ×{room.stackChain.count}
-        </div>
-      )}
+      <AnimatePresence>
+        {room?.stackChain && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: "auto" }}
+            exit={{ opacity: 0, y: -20, height: 0 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            className="mx-4 mt-3 px-4 py-2 rounded-xl bg-uno-red/10 border border-uno-red/30 flex items-center justify-center gap-2 text-sm text-uno-red font-semibold overflow-hidden"
+          >
+            <AlertTriangle size={16} />
+            Empilhamento ativo: {STACK_LABELS[room.stackChain.type] || room.stackChain.type} ×{room.stackChain.count}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="flex-1 flex flex-col items-center justify-center gap-6 p-4">
         <div className="flex items-center gap-8">
@@ -107,7 +116,17 @@ export default function GameBoard() {
           </div>
 
           <div className="flex flex-col items-center gap-1.5">
-            <Card card={gameState.currentCard} size="lg" />
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`discard-${gameState.currentCard.type}-${"color" in gameState.currentCard ? gameState.currentCard.color : "wild"}-${"value" in gameState.currentCard ? gameState.currentCard.value : ""}`}
+                initial={{ opacity: 0, scale: 0.5, rotate: -20, y: 40 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0, y: 0 }}
+                exit={{ opacity: 0, scale: 0.5, rotate: 20, y: -40 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              >
+                <Card card={gameState.currentCard} size="lg" />
+              </motion.div>
+            </AnimatePresence>
             <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-surface-raised border border-border">
               <div className={`w-2.5 h-2.5 rounded-full shadow-[0_0_6px_currentColor] ${
                 gameState.currentColor === "red" ? "bg-uno-red text-uno-red" :

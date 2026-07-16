@@ -1,7 +1,8 @@
 "use client";
 import { memo } from "react";
+import { motion } from "motion/react";
 import { Card as CardType } from "@/game-engine/types";
-import { Ban, RefreshCw, Sparkles } from "lucide-react";
+import { Ban, RefreshCw } from "lucide-react";
 
 const COLOR_MAP: Record<string, { bg: string; ring: string; oval: string }> = {
   red:    { bg: "from-uno-red to-red-700",    ring: "ring-uno-red/50",     oval: "bg-white" },
@@ -31,9 +32,10 @@ interface CardProps {
   playable?: boolean;
   size?: "sm" | "md" | "lg";
   index?: number;
+  isNew?: boolean;
 }
 
-const UnoCard = memo(function UnoCard({ card, onClick, selected, playable, size = "md", index = 0 }: CardProps) {
+const UnoCard = memo(function UnoCard({ card, onClick, selected, playable, size = "md", index = 0, isNew }: CardProps) {
   const isWild = card.type === "wild" || card.type === "wild4";
   const colors = isWild ? { bg: "from-gray-900 to-gray-950", ring: "ring-gray-600/50", oval: "bg-gray-800" } : COLOR_MAP[card.color!] || COLOR_MAP.red;
 
@@ -51,35 +53,45 @@ const UnoCard = memo(function UnoCard({ card, onClick, selected, playable, size 
       case "skip": return "⊘";
       case "reverse": return "↺";
       case "draw2": return "+2";
-      case "wild": return "";
-      case "wild4": return "";
+      default: return "";
     }
   };
 
   const iconSize = size === "lg" ? 28 : size === "sm" ? 12 : 18;
 
   return (
-    <button
+    <motion.button
       onClick={onClick}
       disabled={!playable && onClick != null}
+      layout
+      initial={isNew ? { opacity: 0, y: 40, scale: 0.3, rotate: -15 } : false}
+      animate={{
+        opacity: playable || !onClick ? 1 : 0.4,
+        scale: selected ? 1.1 : 1,
+        y: selected ? -16 : 0,
+        filter: playable || !onClick ? "saturate(1)" : "saturate(0)",
+        boxShadow: selected
+          ? "0 12px 30px rgba(0,0,0,0.5)"
+          : playable
+            ? "0 2px 8px rgba(0,0,0,0.3)"
+            : "0 1px 3px rgba(0,0,0,0.2)",
+      }}
+      exit={{ opacity: 0, y: -40, scale: 0.5, transition: { duration: 0.2 } }}
+      whileHover={playable ? { scale: 1.08, y: -12, boxShadow: "0 8px 25px rgba(0,0,0,0.4)" } : {}}
+      whileTap={playable ? { scale: 0.92, transition: { duration: 0.1 } } : {}}
+      transition={{
+        type: "spring",
+        stiffness: 400,
+        damping: 25,
+        mass: 0.8,
+        delay: index * 0.03,
+      }}
       className={`
         ${sizeClasses[size]} relative
         bg-gradient-to-b ${colors.bg}
         text-white font-black select-none
-        transition-all duration-200 ease-out
-        ${playable
-          ? "hover:-translate-y-3 hover:shadow-[0_8px_25px_rgba(0,0,0,0.4)] hover:scale-105 cursor-pointer animate-fade-in"
-          : onClick
-            ? "opacity-40 cursor-not-allowed saturate-0"
-            : "cursor-default"}
-        ${selected
-          ? "-translate-y-4 scale-110 shadow-[0_12px_30px_rgba(0,0,0,0.5)] z-20 ring-3 ring-white ring-offset-2 ring-offset-surface"
-          : "shadow-[0_2px_8px_rgba(0,0,0,0.3)]"}
+        z-0
       `}
-      style={{
-        animationDelay: `${index * 30}ms`,
-        animationFillMode: "backwards",
-      }}
     >
       <div className="absolute inset-[3px] rounded-[4px] border border-white/30" />
 
@@ -124,9 +136,13 @@ const UnoCard = memo(function UnoCard({ card, onClick, selected, playable, size 
       </div>
 
       {selected && (
-        <div className="absolute inset-0 rounded-[8px] animate-glow-pulse pointer-events-none" />
+        <motion.div
+          className="absolute inset-0 rounded-[8px] pointer-events-none"
+          animate={{ boxShadow: ["0 0 0px rgba(255,255,255,0)", "0 0 15px rgba(255,255,255,0.4)", "0 0 0px rgba(255,255,255,0)"] }}
+          transition={{ repeat: Infinity, duration: 1.5 }}
+        />
       )}
-    </button>
+    </motion.button>
   );
 });
 
