@@ -208,8 +208,13 @@ export function setupSocket(io: SocketIOServer): void {
         return;
       }
       try {
-        const card = room.players[room.currentPlayerIndex].hand[cardIndex];
-        const isSkipOrReverse = card?.type === "skip" || card?.type === "reverse";
+        const currentPlayer = room.players[room.currentPlayerIndex];
+        const card = currentPlayer?.hand?.[cardIndex];
+        if (!card) {
+          socket.emit("error", { message: "Carta invalida" });
+          return;
+        }
+        const isSkipOrReverse = card.type === "skip" || card.type === "reverse";
         if (isSkipOrReverse && room.players.length === 2) {
           clearRoomTimer(room.id);
           let updated = playCard(room, playerId, cardIndex);
