@@ -31,6 +31,8 @@ describe("2 players: reverse then skip then normal", () => {
 
     g = playCard(g, g.players[0].id, 0);
     expect(g.discardPile[g.discardPile.length - 1].type).toBe("number");
+  });
+
   it("P0 plays block, block, block, reverse, block, reverse, number → all P0 turns", () => {
     const room = joinRoom(createRoom("P0"), "P1");
     let g = startGame(room);
