@@ -112,7 +112,7 @@ export default function GameBoard() {
             exit={{ opacity: 0, y: -10 }}
             className="absolute top-20 left-4 right-4 z-30 flex justify-center pointer-events-none"
           >
-            <div className="px-4 py-2 rounded-xl bg-uno-red/20 border border-uno-red/30 flex items-center gap-2 text-sm text-uno-red font-semibold pointer-events-auto">
+            <div className="px-4 py-2 rounded-xl bg-brand/20 border border-brand/30 flex items-center gap-2 text-sm text-brand font-semibold pointer-events-auto">
               <AlertTriangle size={16} />
               Empilhamento ativo: {STACK_LABELS[room.stackChain.type] || room.stackChain.type} ×{room.stackChain.count}
             </div>
@@ -135,7 +135,7 @@ export default function GameBoard() {
                   }}
                 />
               ))}
-              <div className="absolute inset-0 w-[70px] h-[98px] rounded-[8px] bg-gradient-to-b from-uno-red/20 to-uno-red/5 border border-uno-red/30 flex items-center justify-center z-10 shadow-lg">
+              <div className="absolute inset-0 w-[70px] h-[98px] rounded-[8px] bg-gradient-to-b from-brand/20 to-uno-red/5 border border-brand/30 flex items-center justify-center z-10 shadow-lg">
                 <span className="text-lg font-black text-white/60">{gameState.drawPileCount}</span>
               </div>
             </div>
@@ -156,7 +156,7 @@ export default function GameBoard() {
             </AnimatePresence>
             <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-surface-raised border border-border">
               <div className={`w-2.5 h-2.5 rounded-full shadow-[0_0_6px_currentColor] ${
-                gameState.currentColor === "red" ? "bg-uno-red text-uno-red" :
+                gameState.currentColor === "red" ? "bg-brand text-brand" :
                 gameState.currentColor === "blue" ? "bg-uno-blue text-uno-blue" :
                 gameState.currentColor === "green" ? "bg-uno-green text-uno-green" :
                 "bg-uno-yellow text-uno-yellow"

@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  --color-surface: #050505;
-  --color-surface-raised: #0d0d0d;
-  --color-surface-overlay: #141414;
-  --color-surface-card: #1a1a1a;
-  --color-brand: #e74c3c;
-  --color-brand-light: #ff6b6b;
-  --color-brand-dark: #c0392b;
-  --color-brand-glow: rgba(231, 76, 60, 0.18);
+  --color-surface: #0a0a0a;
+  --color-surface-raised: #111111;
+  --color-surface-overlay: #181818;
+  --color-surface-card: #1e1e1e;
+  --color-brand: #f59e0b;
+  --color-brand-light: #fbbf24;
+  --color-brand-dark: #d97706;
+  --color-brand-glow: rgba(245, 158, 11, 0.2);
   --color-uno-red: #e74c3c;
   --color-uno-blue: #3498db;
   --color-uno-green: #2ecc71;
-  --color-uno-yellow: #f1c40f;
+  --color-uno-yellow: #fbbf24;
   --color-accent-danger: #ef4444;
   --color-accent-success: #22c55e;
-  --color-accent-warning: #eab308;
+  --color-accent-warning: #f59e0b;
   --color-accent-info: #3498db;
   --color-text-primary: #fafafa;
   --color-text-secondary: #a3a3a3;
@@ -38,11 +38,19 @@
   @keyframes scaleIn { 0% { opacity: 0; transform: scale(0.92); } 100% { opacity: 1; transform: scale(1); } }
   @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
   @keyframes bounceIn { 0% { opacity: 0; transform: scale(0.3); } 50% { transform: scale(1.08); } 70% { transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
-  @keyframes glowPulse { 0%, 100% { box-shadow: 0 0 4px rgba(231,76,60,0.15); } 50% { box-shadow: 0 0 18px rgba(231,76,60,0.35); } }
+  @keyframes glowPulse { 0%, 100% { box-shadow: 0 0 4px rgba(245,158,11,0.15); } 50% { box-shadow: 0 0 18px rgba(245,158,11,0.35); } }
 }
 
 @layer base {
-  body { background-color: var(--color-surface); color: var(--color-text-primary); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; }
+  body {
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, #1a1a1a 0%, #0a0a0a 60%);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    min-height: 100dvh;
+  }
   input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
   input[type="number"] { -moz-appearance: textfield; }
 }

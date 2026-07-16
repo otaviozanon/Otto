@@ -78,7 +78,7 @@ export default function GameResult() {
               className={`w-full py-3 rounded-xl font-black text-lg transition-colors flex items-center justify-center gap-2 ${
                 hasVoted
                   ? "bg-surface-raised text-text-muted border border-border cursor-not-allowed"
-                  : "bg-uno-red text-white hover:bg-red-600"
+                  : "bg-brand text-white hover:bg-red-600"
               }`}
             >
               <RotateCcw size={18} />

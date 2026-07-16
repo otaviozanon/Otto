@@ -44,9 +44,9 @@ export default function HomePage() {
             transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-uno-red/30 blur-2xl rounded-full scale-150" />
-              <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 30 30" className="relative drop-shadow-[0_0_30px_rgba(231,76,60,0.6)]">
-                <path fill="#e74c3c" d="M6.03 5.73v17.79L2.05 8.45C1.82 7.59 2.34 6.7 3.21 6.47L6.03 5.73zM12.17 3.99c-.1.21-.19.43-.25.67L8.03 19.18V5.61c0-.9.72-1.62 1.62-1.62H12.17zM22.351 27.574l-11.962-3.201c-.865-.232-1.379-1.121-1.148-1.986l4.606-17.214c.232-.865 1.121-1.379 1.986-1.148l11.962 3.201c.865.232 1.379 1.121 1.148 1.986l-4.606 17.214C24.106 27.292 23.217 27.806 22.351 27.574zM20.436 10.632c-1.912 2.144-5.181 1.923-5.937 4.713-.325 1.199.383 2.433 1.582 2.758 1.229.333 2.129-.461 2.452-.806-.792 1.826-2.026 2.918-2.026 2.918s1.408-.284 2.48.673c0 0-.514-1.565-.276-3.54.105.462.48 1.598 1.71 1.932 1.199.325 2.433-.383 2.758-1.582C23.935 14.909 21.003 13.449 20.436 10.632z"/>
+              <div className="absolute inset-0 bg-brand/30 blur-2xl rounded-full scale-150" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 30 30" className="relative drop-shadow-[0_0_30px_rgba(245,158,11,0.6)]">
+                <path fill="#f59e0b" d="M6.03 5.73v17.79L2.05 8.45C1.82 7.59 2.34 6.7 3.21 6.47L6.03 5.73zM12.17 3.99c-.1.21-.19.43-.25.67L8.03 19.18V5.61c0-.9.72-1.62 1.62-1.62H12.17zM22.351 27.574l-11.962-3.201c-.865-.232-1.379-1.121-1.148-1.986l4.606-17.214c.232-.865 1.121-1.379 1.986-1.148l11.962 3.201c.865.232 1.379 1.121 1.148 1.986l-4.606 17.214C24.106 27.292 23.217 27.806 22.351 27.574zM20.436 10.632c-1.912 2.144-5.181 1.923-5.937 4.713-.325 1.199.383 2.433 1.582 2.758 1.229.333 2.129-.461 2.452-.806-.792 1.826-2.026 2.918-2.026 2.918s1.408-.284 2.48.673c0 0-.514-1.565-.276-3.54.105.462.48 1.598 1.71 1.932 1.199.325 2.433-.383 2.758-1.582C23.935 14.909 21.003 13.449 20.436 10.632z"/>
               </svg>
             </div>
           </motion.div>
@@ -56,10 +56,10 @@ export default function HomePage() {
         </div>
 
         <div className="space-y-4">
-          <input className="w-full px-5 py-4 rounded-2xl bg-surface-raised border-2 border-border text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:border-uno-red/40 focus:bg-surface-card transition-all duration-300 text-lg font-medium touch-target"
+          <input className="w-full px-5 py-4 rounded-2xl bg-surface-raised border-2 border-border text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:border-brand/40 focus:bg-surface-card transition-all duration-300 text-lg font-medium touch-target"
             placeholder="Seu nome" value={name} onChange={(e) => setName(e.target.value)} maxLength={20} />
 
-          <button onClick={handleCreate} className="w-full flex items-center justify-center gap-3 px-6 py-5 rounded-2xl bg-gradient-to-r from-uno-red to-red-700 hover:from-red-500 hover:to-red-800 active:scale-[0.98] text-white font-black text-lg transition-all duration-200 touch-target shadow-2xl shadow-uno-red/30">
+          <button onClick={handleCreate} className="w-full flex items-center justify-center gap-3 px-6 py-5 rounded-2xl bg-gradient-to-r from-brand to-amber-600 hover:from-amber-400 hover:to-amber-700 active:scale-[0.98] text-white font-black text-lg transition-all duration-200 touch-target shadow-2xl shadow-brand/30">
             <Users size={22} />Criar Sala<ArrowRight size={18} />
           </button>
 
@@ -70,9 +70,9 @@ export default function HomePage() {
           </div>
 
           <div className="flex gap-2">
-            <input className="flex-1 px-5 py-4 rounded-2xl bg-surface-raised border-2 border-border text-text-primary placeholder:text-text-muted/50 text-center text-lg font-mono font-bold tracking-[0.4em] uppercase focus:outline-none focus:border-uno-red/40 transition-all duration-300 touch-target"
+            <input className="flex-1 px-5 py-4 rounded-2xl bg-surface-raised border-2 border-border text-text-primary placeholder:text-text-muted/50 text-center text-lg font-mono font-bold tracking-[0.4em] uppercase focus:outline-none focus:border-brand/40 transition-all duration-300 touch-target"
               placeholder="CODIGO" value={roomCode} onChange={(e) => setRoomCode(e.target.value)} maxLength={6} />
-            <button onClick={handleJoin} className="px-7 py-4 rounded-2xl bg-surface-raised hover:bg-surface-card border-2 border-border hover:border-uno-red/30 text-text-primary font-bold text-lg transition-all duration-200 active:scale-[0.98] touch-target">
+            <button onClick={handleJoin} className="px-7 py-4 rounded-2xl bg-surface-raised hover:bg-surface-card border-2 border-border hover:border-brand/30 text-text-primary font-bold text-lg transition-all duration-200 active:scale-[0.98] touch-target">
               <LogIn size={22} />
             </button>
           </div>

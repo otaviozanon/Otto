@@ -11,7 +11,7 @@ const COLOR_MAP: Record<string, { bg: string; ring: string; oval: string }> = {
   yellow: { bg: "from-uno-yellow to-yellow-500", ring: "ring-uno-yellow/50", oval: "bg-white" },
 };
 
-const WILD_COLORS = ["#e74c3c", "#3498db", "#2ecc71", "#f1c40f"];
+const WILD_COLORS = ["#f59e0b", "#3498db", "#2ecc71", "#f1c40f"];
 
 function WildIcon() {
   return (

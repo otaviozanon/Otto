@@ -4,7 +4,7 @@ import { useGameStore } from "@/lib/store";
 import { getSocket } from "@/lib/socket";
 
 const COLORS = [
-  { color: "red", bg: "bg-uno-red", label: "Vermelho" },
+  { color: "red", bg: "bg-brand", label: "Vermelho" },
   { color: "blue", bg: "bg-uno-blue", label: "Azul" },
   { color: "green", bg: "bg-uno-green", label: "Verde" },
   { color: "yellow", bg: "bg-uno-yellow", label: "Amarelo" },

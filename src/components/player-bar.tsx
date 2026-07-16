@@ -23,13 +23,13 @@ const PlayerBar = memo(function PlayerBar({ players, currentPlayerId, myPlayerId
               className={`
                 relative flex flex-col items-center gap-0.5 px-4 py-2.5 rounded-xl min-w-[72px]
                 ${isCurrent
-                  ? "bg-uno-red/20 border-2 border-uno-red"
+                  ? "bg-brand/20 border-2 border-uno-red"
                   : "bg-surface-raised border border-border opacity-70"}
               `}
             >
               {isCurrent && (
                 <motion.div
-                  className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-uno-red rounded-full"
+                  className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-brand rounded-full"
                   animate={{ scale: [1, 1.5, 1] }}
                   transition={{ repeat: Infinity, duration: 1.2 }}
                 />
