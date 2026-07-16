@@ -185,7 +185,7 @@ export default function GameBoard() {
       </div>
 
       <CardHand cards={gameState.hand} selectedIndex={selectedIndex} onSelectCard={setSelectedIndex}
-        playableCards={playableCards} disabled={!isMyTurn || hasDrawn} />
+        playableCards={playableCards} disabled={!isMyTurn} />
 
       <ColorPicker />
       <GameResult />
