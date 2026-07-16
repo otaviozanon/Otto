@@ -190,15 +190,6 @@ export default function GameBoard() {
           </div>
         </div>
 
-        <div className="text-center text-xs text-text-muted">
-          Suas cartas: <span className="text-text-primary font-bold">{myCardCount}</span>
-          {hasDrawn && gameState.hand.length > 0 && (
-            <span className="ml-3 text-uno-yellow font-medium">
-              ◆ Carta comprada: última da mão
-            </span>
-          )}
-        </div>
-
         {error && (
           <div className="px-4 py-2 rounded-xl bg-accent-danger/10 border border-accent-danger/20 text-accent-danger text-xs font-medium text-center">
             {error}
@@ -213,6 +204,15 @@ export default function GameBoard() {
 
       <CardHand cards={gameState.hand} selectedIndex={selectedIndex} onSelectCard={setSelectedIndex}
         playableCards={playableCards} disabled={!isMyTurn} />
+
+      <div className="text-center text-xs text-text-muted pb-2">
+        Suas cartas: <span className="text-text-primary font-bold">{myCardCount}</span>
+        {hasDrawn && gameState.hand.length > 0 && (
+          <span className="ml-3 text-uno-yellow font-medium">
+            ◆ Carta comprada: última da mão
+          </span>
+        )}
+      </div>
 
       <ColorPicker />
       <GameResult />

@@ -21,7 +21,7 @@ const PlayerBar = memo(function PlayerBar({ players, currentPlayerId, myPlayerId
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               className={`
-                relative flex flex-col items-center gap-1 px-4 py-3 rounded-xl min-w-[72px]
+                relative flex flex-col items-center gap-0.5 px-4 py-2.5 rounded-xl min-w-[72px]
                 ${isCurrent
                   ? "bg-uno-red/20 border-2 border-uno-red"
                   : "bg-surface-raised border border-border opacity-70"}
@@ -29,35 +29,17 @@ const PlayerBar = memo(function PlayerBar({ players, currentPlayerId, myPlayerId
             >
               {isCurrent && (
                 <motion.div
-                  className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-uno-red rounded-full"
-                  animate={{ scale: [1, 1.4, 1] }}
+                  className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-uno-red rounded-full"
+                  animate={{ scale: [1, 1.5, 1] }}
                   transition={{ repeat: Infinity, duration: 1.2 }}
                 />
               )}
 
               <span className="text-[10px] text-text-muted truncate max-w-[72px] leading-tight">{p.name}</span>
-
-              <div className="flex items-end gap-0.5">
-                <span className={`text-lg font-black ${isCurrent ? "text-uno-red" : "text-text-primary"}`}>
-                  {p.cardCount}
-                </span>
-                <span className="text-[8px] text-text-muted mb-0.5">cartas</span>
-              </div>
-
-              <div className="flex -space-x-2">
-                {Array.from({ length: Math.min(p.cardCount, 4) }).map((_, i) => (
-                  <div
-                    key={i}
-                    className={`w-3 h-4 rounded-[2px] border border-white/10 ${
-                      isCurrent ? "bg-uno-red/30" : "bg-white/5"
-                    }`}
-                    style={{ transform: `rotate(${(i - 1.5) * 3}deg)` }}
-                  />
-                ))}
-                {p.cardCount > 4 && (
-                  <span className="text-[8px] text-text-muted ml-0.5 self-end">+{p.cardCount - 4}</span>
-                )}
-              </div>
+              <span className={`text-lg font-black ${isCurrent ? "text-uno-red" : "text-text-primary"}`}>
+                {p.cardCount}
+              </span>
+              <span className="text-[9px] text-text-muted leading-none">cartas</span>
             </motion.div>
           );
         })}
