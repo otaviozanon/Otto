@@ -207,7 +207,7 @@ export default function GameBoard() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="fixed bottom-[180px] left-1/2 -translate-x-1/2 z-30 pointer-events-none"
+              className="fixed top-[72px] left-1/2 -translate-x-1/2 z-30 pointer-events-none"
           >
             <div className="px-4 py-1.5 rounded-full bg-uno-yellow/20 border border-uno-yellow/40 backdrop-blur-sm shadow-lg shadow-uno-yellow/10">
               <span className="text-xs font-black text-uno-yellow tracking-wider">📢 {unoNotif.playerName} pediu UNO!</span>
@@ -222,7 +222,7 @@ export default function GameBoard() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="fixed bottom-[140px] left-1/2 -translate-x-1/2 z-30 pointer-events-none"
+              className="fixed top-[110px] left-1/2 -translate-x-1/2 z-31 pointer-events-none"
           >
             <div className="px-4 py-1 rounded-full bg-uno-yellow/15 border border-uno-yellow/30 backdrop-blur-sm">
               <span className="text-[11px] font-bold text-uno-yellow tracking-[0.2em] uppercase">◆ Seu Turno</span>
