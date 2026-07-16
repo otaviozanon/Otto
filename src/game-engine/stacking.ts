@@ -9,31 +9,7 @@ export function resolveStack(room: Room): Room {
 
   let updated = { ...room };
 
-  if (chain.type === "draw2") {
-    const drawCount = DRAW_MAP[chain.type] * chain.count;
-    const victimIdx = updated.currentPlayerIndex;
-    let currentDraw = updated.drawPile;
-
-    for (let i = 0; i < drawCount; i++) {
-      if (currentDraw.length === 0) {
-        currentDraw = shuffle([...updated.discardPile.slice(0, -1)]);
-        updated = { ...updated, discardPile: [updated.discardPile[updated.discardPile.length - 1]] };
-      }
-      const { card, remaining } = draw(currentDraw);
-      currentDraw = remaining;
-      updated = {
-        ...updated,
-        players: updated.players.map((p, idx) =>
-          idx === victimIdx ? { ...p, hand: [...p.hand, card] } : p
-        ),
-      };
-    }
-    updated = { ...updated, drawPile: currentDraw, stackChain: null };
-    updated = advanceAfterStack(updated);
-    return updated;
-  }
-
-  if (chain.type === "wild4") {
+  if (chain.type === "draw2" || chain.type === "wild4") {
     const drawCount = DRAW_MAP[chain.type] * chain.count;
     const victimIdx = updated.currentPlayerIndex;
     let currentDraw = updated.drawPile;
