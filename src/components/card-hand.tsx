@@ -21,8 +21,8 @@ function cardKey(card: CardType, i: number): string {
 
 const CardHand = memo(function CardHand({ cards, selectedIndex, onSelectCard, playableCards, disabled, cardCount, isDrawing }: CardHandProps) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 p-4 pt-8 pb-4 bg-gradient-to-t from-surface via-surface/98 to-transparent z-20">
-      <div className="flex justify-center items-end gap-1 overflow-visible pb-1 min-h-[120px]">
+    <div className="fixed bottom-0 left-0 right-0 px-4 pt-10 pb-5 bg-gradient-to-t from-surface via-surface/98 to-transparent z-20">
+      <div className="flex justify-center items-end gap-1.5 overflow-visible pb-1.5 min-h-[130px]">
         {cards.map((card, i) => (
           <Card
             key={cardKey(card, i)}
@@ -35,10 +35,10 @@ const CardHand = memo(function CardHand({ cards, selectedIndex, onSelectCard, pl
           />
         ))}
       </div>
-      <div className="text-center text-[10px] text-text-muted">
-        <span className="text-text-primary font-bold">{cardCount}</span> cartas
+      <div className="text-center text-xs text-text-muted pt-1">
+        <span className="text-text-primary font-bold text-sm">{cardCount}</span> cartas
         {isDrawing && cards.length > 0 && (
-          <span className="ml-2 text-uno-yellow font-medium">◆ comprada</span>
+          <span className="ml-2 text-uno-yellow font-semibold text-xs">◆ comprada</span>
         )}
       </div>
     </div>

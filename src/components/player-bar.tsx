@@ -9,7 +9,7 @@ const PlayerBar = memo(function PlayerBar({ players, currentPlayerId, myPlayerId
   const others = players.filter((p) => p.id !== myPlayerId);
 
   return (
-    <div className="flex justify-center gap-2 flex-wrap px-4 pt-4">
+    <div className="flex justify-center gap-2 flex-wrap px-4 pt-5 pb-1">
       <AnimatePresence mode="popLayout">
         {others.map((p) => {
           const isCurrent = p.id === currentPlayerId;

@@ -41,7 +41,7 @@ const UnoCard = memo(function UnoCard({ card, onClick, selected, playable, size 
 
   const sizeClasses = {
     sm:  "w-11 h-16 text-[10px] rounded-[6px]",
-    md:  "w-[56px] h-[80px] text-xs rounded-[8px]",
+    md:  "w-[62px] h-[88px] text-xs rounded-[8px]",
     lg:  "w-[84px] h-[116px] text-base rounded-[12px]",
   };
 
