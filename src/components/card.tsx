@@ -66,9 +66,10 @@ const UnoCard = memo(function UnoCard({ card, onClick, selected, playable, size 
       layout
       initial={isNew ? { opacity: 0, y: 40, scale: 0.3, rotate: -15 } : false}
       animate={{
-        opacity: playable ? 1 : onClick ? 0.55 : 1,
+        opacity: playable ? 1 : 0.35,
         scale: selected ? 1.1 : 1,
         y: selected ? -16 : 0,
+        filter: playable ? "saturate(1)" : "saturate(0.2)",
         boxShadow: selected
           ? "0 12px 30px rgba(0,0,0,0.5)"
           : playable
