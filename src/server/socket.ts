@@ -29,6 +29,7 @@ function startTurnTimer(io: SocketIOServer, room: Room, roomId: string): void {
     const updated = processTurnTimeout(r, cp.id);
     setRoom(roomId, updated);
     sendYourState(io, updated);
+    startTurnTimer(io, updated, roomId);
   }, TURN_TIMEOUT);
   roomTimers.set(roomId, timer);
 }

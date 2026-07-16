@@ -35,14 +35,14 @@ export default function GameBoard() {
     const isMyTurnNow = gameState.currentPlayerId === myPlayerId;
 
     if (isMyTurnNow) {
-      if (!showTurnBanner) setShowTurnBanner(true);
+      setShowTurnBanner(true);
       if (bannerTimerRef.current) clearTimeout(bannerTimerRef.current);
       bannerTimerRef.current = setTimeout(() => setShowTurnBanner(false), 3000);
     } else {
       setShowTurnBanner(false);
       if (bannerTimerRef.current) { clearTimeout(bannerTimerRef.current); bannerTimerRef.current = undefined; }
     }
-  }, [gameState?.currentPlayerId, myPlayerId, showTurnBanner]);
+  }, [gameState?.currentPlayerId, myPlayerId]);
 
   useEffect(() => () => { if (bannerTimerRef.current) clearTimeout(bannerTimerRef.current); }, []);
 
