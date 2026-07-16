@@ -9,6 +9,30 @@ const COLOR_MAP: Record<string, { bg: string; text: string; border: string }> = 
   yellow: { bg: "bg-uno-yellow", text: "text-black", border: "border-uno-yellow" },
 };
 
+const WILD_COLORS = ["bg-uno-red", "bg-uno-blue", "bg-uno-green", "bg-uno-yellow"];
+
+function WildIcon() {
+  return (
+    <div className="relative w-10 h-10">
+      {WILD_COLORS.map((color, i) => (
+        <div
+          key={color}
+          className={`absolute ${color} rounded-full`}
+          style={{
+            width: "45%",
+            height: "45%",
+            top: i < 2 ? "0%" : "55%",
+            left: i % 2 === 0 ? "0%" : "55%",
+          }}
+        />
+      ))}
+      <div className="absolute inset-[22%] bg-gray-900 rounded-full flex items-center justify-center">
+        <Sparkles size={10} className="text-white" />
+      </div>
+    </div>
+  );
+}
+
 interface CardProps {
   card: CardType;
   onClick?: () => void;
@@ -28,8 +52,8 @@ export default function Card({ card, onClick, selected, playable, size = "md" }:
       case "skip": return <Ban size={20} />;
       case "reverse": return <RefreshCw size={20} />;
       case "draw2": return <span className="font-black">+2</span>;
-      case "wild": return <Sparkles size={20} />;
-      case "wild4": return <><span className="font-black">+4</span><Zap size={14} /></>;
+      case "wild": return <WildIcon />;
+      case "wild4": return <><WildIcon /><span className="font-black text-xs -mt-1">+4</span></>;
     }
   };
 
