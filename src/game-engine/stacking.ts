@@ -30,7 +30,6 @@ export function resolveStack(room: Room): Room {
     }
     updated = { ...updated, drawPile: currentDraw, stackChain: null };
     updated = advanceAfterStack(updated);
-    updated = advanceAfterStack(updated);
     return updated;
   }
 

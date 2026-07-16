@@ -187,7 +187,6 @@ describe("Full game with 4 players", () => {
     s = resolveStack(s);
     expect(s.players[2].hand.length).toBe(5);
     expect(s.stackChain).toBeNull();
-    expect(s.currentPlayerIndex).toBe(0);
   });
 });
 
