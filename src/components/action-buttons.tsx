@@ -20,7 +20,7 @@ export default function ActionButtons(props: ActionButtonsProps) {
   );
 
   const showUno = props.handSize === 2 && !props.calledUno;
-  const canPlayCard = props.canPlay && props.hasSelectedCard;
+  const canPlayCard = (props.canPlay || props.canStack) && props.hasSelectedCard;
 
   return (
     <div className="flex justify-center gap-3 py-3 flex-wrap">

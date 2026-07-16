@@ -293,8 +293,9 @@ export function setupSocket(io: SocketIOServer): void {
       let updated = chooseColor(room, color as Color);
       if (updated.stackChain?.type === "wild4") {
         updated = advanceAfterStack(updated);
+      } else {
+        updated = resolveStack(updated);
       }
-      updated = resolveStack(updated);
       setRoom(room.id, updated);
       if (updated.status === "finished") {
         io.to(room.id).emit("game:end", {
