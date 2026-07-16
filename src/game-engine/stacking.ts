@@ -40,7 +40,7 @@ export function resolveStack(room: Room): Room {
   }
 
   if (chain.type === "reverse") {
-    const newDir = (updated.direction * -1) as 1 | -1;
+    const newDir = (chain.count % 2 === 1 ? updated.direction * -1 : updated.direction) as 1 | -1;
     updated = { ...updated, direction: newDir };
     if (updated.players.length === 2) {
       return { ...updated, stackChain: null };
