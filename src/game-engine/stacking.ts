@@ -34,6 +34,9 @@ export function resolveStack(room: Room): Room {
   }
 
   if (chain.type === "skip") {
+    if (updated.players.length === 2) {
+      return { ...updated, stackChain: null };
+    }
     for (let i = 0; i < chain.count; i++) updated = advanceAfterStack(updated);
     return { ...updated, stackChain: null };
   }

@@ -44,19 +44,24 @@ export default function ActionButtons(props: ActionButtonsProps) {
       <AnimatePresence mode="wait">
         {!props.hasDrawn ? (
           <motion.div key="pre-draw" className="flex gap-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <motion.button
-              onClick={props.onPlay}
-              disabled={!canPlayCard}
-              whileHover={canPlayCard ? { scale: 1.05 } : {}}
-              whileTap={canPlayCard ? { scale: 0.93 } : {}}
-              className={`${btnBase} ${
-                canPlayCard
-                  ? "bg-uno-green text-white hover:bg-green-600 shadow-lg shadow-green-500/30"
-                  : "bg-surface-raised text-text-muted border border-border"
-              }`}
-            >
-              <Play size={18} />Jogar
-            </motion.button>
+            {canPlayCard ? (
+              <motion.button
+                onClick={props.onPlay}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.93 }}
+                className={`${btnBase} bg-uno-green text-white hover:bg-green-600 shadow-lg shadow-green-500/30`}
+              >
+                <Play size={18} />Jogar
+              </motion.button>
+            ) : props.canStack ? (
+              <motion.button
+                onClick={props.onPlay}
+                disabled
+                className={`${btnBase} bg-surface-raised text-text-muted border border-border cursor-not-allowed`}
+              >
+                <Play size={18} />Jogar
+              </motion.button>
+            ) : null}
             <motion.button
               onClick={props.onDraw}
               whileHover={{ scale: 1.05 }}
