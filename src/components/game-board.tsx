@@ -112,6 +112,19 @@ export default function GameBoard() {
         )}
       </AnimatePresence>
 
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={showTurnBanner ? "on" : "off"}
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: showTurnBanner ? 1 : 0, height: showTurnBanner ? "auto" : 0 }}
+          className="overflow-hidden flex justify-center"
+        >
+          <div className="px-4 py-1.5 mb-1 rounded-full bg-uno-yellow/10 border border-uno-yellow/20">
+            <span className="text-[11px] font-bold text-uno-yellow tracking-[0.2em] uppercase">◆ Seu Turno</span>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
       <div className="flex-1 flex flex-col items-center justify-center gap-3 p-4 pt-1 pb-0"> 
         <div className="flex items-center gap-8">
           <div className="flex flex-col items-center gap-1.5">
@@ -188,21 +201,6 @@ export default function GameBoard() {
           handSize={gameState.hand.length} isMyTurn={isMyTurn}
           onPlay={handlePlay} onDraw={handleDraw} onPlayDrawn={handlePlayDrawn} onPass={handlePass} onUno={handleUno} />
       </div>
-
-      <AnimatePresence>
-        {showTurnBanner && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
-          >
-            <div className="px-5 py-2 rounded-full bg-uno-yellow/15 border border-uno-yellow/30 backdrop-blur-sm">
-              <span className="text-xs font-bold text-uno-yellow tracking-[0.2em] uppercase">◆ Seu Turno</span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <CardHand cards={gameState.hand} selectedIndex={selectedIndex} onSelectCard={setSelectedIndex}
         playableCards={playableCards} disabled={!isMyTurn} cardCount={myCardCount} isDrawing={hasDrawn} />
