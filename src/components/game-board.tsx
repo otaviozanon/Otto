@@ -208,7 +208,7 @@ export default function GameBoard() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.5, y: -20 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            className="fixed top-[90px] left-1/2 -translate-x-1/2 z-35 pointer-events-none"
+            className="fixed top-[120px] left-1/2 -translate-x-1/2 z-35 pointer-events-none"
           >
             <div className="px-5 py-2 rounded-full bg-uno-red/90 border-2 border-uno-red shadow-2xl shadow-uno-red/40 backdrop-blur-sm">
               <span className="text-sm font-black text-white tracking-wider drop-shadow-lg">
@@ -225,7 +225,7 @@ export default function GameBoard() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="fixed top-[90px] left-1/2 -translate-x-1/2 z-30 pointer-events-none"
+            className="fixed top-[120px] left-1/2 -translate-x-1/2 z-30 pointer-events-none"
           >
             <div className="px-4 py-1 rounded-full bg-uno-yellow/15 border border-uno-yellow/30 backdrop-blur-sm">
               <span className="text-[11px] font-bold text-uno-yellow tracking-[0.2em] uppercase">◆ Seu Turno</span>
