@@ -39,7 +39,7 @@ export default function RoomPage() {
     <main className="min-h-dvh flex items-center justify-center p-4 bg-surface">
       <div className="w-full max-w-md space-y-8 animate-scale-in">
         <div className="text-center space-y-2">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-uno-red flex items-center justify-center shadow-lg shadow-uno-red/30">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-brand flex items-center justify-center shadow-lg shadow-brand/30">
             <Users size={32} className="text-white" />
           </div>
           <h1 className="text-2xl font-bold text-text-primary">Sala de Espera</h1>
@@ -47,7 +47,7 @@ export default function RoomPage() {
 
         <div className="text-center p-6 rounded-xl bg-surface-raised border border-border">
           <p className="text-text-muted text-sm mb-2">Codigo da sala</p>
-          <button onClick={() => navigator.clipboard.writeText(room.id).catch(() => {})} className="group flex items-center justify-center gap-3 mx-auto text-4xl font-mono font-bold text-uno-red hover:text-red-400 tracking-[0.3em] transition-all duration-200 touch-target">
+          <button onClick={() => navigator.clipboard.writeText(room.id).catch(() => {})} className="group flex items-center justify-center gap-3 mx-auto text-4xl font-mono font-bold text-brand hover:text-brand-light tracking-[0.3em] transition-all duration-200 touch-target">
             {room.id}<Copy size={20} />
           </button>
           <p className="text-text-muted text-xs mt-2">Clique para copiar</p>
