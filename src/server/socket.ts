@@ -9,15 +9,18 @@ import { Room, PlayerGameState, PlayerPublic, Card } from "@/game-engine/types";
 const TURN_TIMEOUT = 15000;
 
 const roomTimers = new Map<string, ReturnType<typeof setTimeout>>();
+const timerStartedAt = new Map<string, number>();
 
 function clearRoomTimer(roomId: string): void {
   const t = roomTimers.get(roomId);
   if (t) clearTimeout(t);
   roomTimers.delete(roomId);
+  timerStartedAt.delete(roomId);
 }
 
 function startTurnTimer(io: SocketIOServer, room: Room, roomId: string): void {
   clearRoomTimer(roomId);
+  timerStartedAt.set(roomId, Date.now());
   const timer = setTimeout(() => {
     const r = getRoom(roomId);
     if (!r || r.status !== "playing") return;
@@ -53,7 +56,7 @@ function sendYourState(io: SocketIOServer, room: Room): void {
       direction: room.direction,
       players: room.players.map((p) => ({ id: p.id, name: p.name, cardCount: p.hand.length })),
       currentPlayerId: currentPlayer?.id || "",
-      turnTimer: isMyTurn ? TURN_TIMEOUT / 1000 : 0,
+      turnTimer: isMyTurn ? Math.max(0, Math.ceil((TURN_TIMEOUT - (Date.now() - (timerStartedAt.get(room.id) ?? Date.now()))) / 1000)) : 0,
       calledUno: room.calledUno[player.id] || false,
       canPlay,
       canStack,
