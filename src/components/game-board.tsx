@@ -146,10 +146,10 @@ export default function GameBoard() {
             <AnimatePresence mode="popLayout">
               <motion.div
                 key={`discard-${gameState.currentCard.type}-${"color" in gameState.currentCard ? gameState.currentCard.color : "wild"}-${"value" in gameState.currentCard ? gameState.currentCard.value : ""}`}
-                initial={{ opacity: 0, y: 60, scale: 0.7 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.12 } }}
-                transition={{ type: "spring", stiffness: 300, damping: 22, mass: 0.8 }}
+                initial={{ opacity: 0, y: 70, scale: 0.5, rotate: -10 }}
+                animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+                exit={{ opacity: 0, scale: 0.85, transition: { duration: 0.1 } }}
+                transition={{ type: "spring", stiffness: 350, damping: 20, mass: 0.8 }}
               >
                 <Card card={gameState.currentCard} size="lg" />
               </motion.div>

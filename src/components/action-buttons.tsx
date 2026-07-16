@@ -32,7 +32,7 @@ export default function ActionButtons(props: ActionButtonsProps) {
             exit={{ scale: 0, opacity: 0 }}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 400, damping: 22, mass: 0.8 }}
+            transition={{ type: "spring", stiffness: 450, damping: 18, mass: 0.8 }}
             onClick={props.onUno}
             className={`${btnBase} bg-uno-yellow text-black shadow-lg shadow-uno-yellow/30`}
           >
@@ -47,9 +47,9 @@ export default function ActionButtons(props: ActionButtonsProps) {
             {canPlayCard ? (
               <motion.button
                 onClick={props.onPlay}
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 350, damping: 20 }}
+                whileHover={{ scale: 1.06 }}
+                whileTap={{ scale: 0.92 }}
+                transition={{ type: "spring", stiffness: 400, damping: 18 }}
                 className={`${btnBase} bg-uno-green text-white hover:bg-green-600 shadow-lg shadow-green-500/30`}
               >
                 <Play size={18} />Jogar
