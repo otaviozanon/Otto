@@ -13,7 +13,7 @@ function makeRoom(overrides: Partial<Room> = {}): Room {
     status: "playing", drawPile: Array(20).fill({ type: "number", color: "red", value: 1 } as Card),
     discardPile: [{ type: "number", color: "blue", value: 5 } as Card],
     currentColor: "blue", direction: 1, currentPlayerIndex: 0,
-    turnTimer: 15, calledUno: {}, stackChain: null, winner: null, ranking: [], lastDrawnCard: {},
+    turnTimer: 15, calledUno: {}, stackChain: null, winner: null, ranking: [], playAgainVotes: [], lastDrawnCard: {},
     ...overrides,
   };
 }

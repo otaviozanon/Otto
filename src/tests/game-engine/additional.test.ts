@@ -230,7 +230,7 @@ describe("Drawn card edge cases", () => {
 
     s = playCard(s, pId, 1);
     expect(s.players[0].hand).toHaveLength(1);
-    expect(s.discardPile[s.discardPile.length - 1].color).toBe("red");
+    expect((s.discardPile[s.discardPile.length - 1] as any).color).toBe("red");
   });
 });
 

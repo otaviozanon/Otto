@@ -4,7 +4,7 @@ import { startGame, playCard, drawCard, playDrawnCard, passTurn, callUno, choose
 import { resolveStack, advanceAfterStack } from "@/game-engine/stacking";
 import { isPlayable, requiresColorChoice } from "@/game-engine/rules";
 import { getRoom, setRoom, deleteRoom, mapSocketToPlayer, removeSocketMapping, getRoomBySocketId, getPlayerIdBySocketId, getSocketId } from "./rooms";
-import { Room, PlayerGameState, PlayerPublic, Card } from "@/game-engine/types";
+import { Room, PlayerGameState, PlayerPublic, Card, Color } from "@/game-engine/types";
 
 const TURN_TIMEOUT = 15000;
 
@@ -290,7 +290,7 @@ export function setupSocket(io: SocketIOServer): void {
         socket.emit("error", { message: "Cor invalida. Use: red, blue, green ou yellow" });
         return;
       }
-      let updated = chooseColor(room, color as typeof valid[number]);
+      let updated = chooseColor(room, color as Color);
       if (updated.stackChain?.type === "wild4") {
         updated = advanceAfterStack(updated);
       }
