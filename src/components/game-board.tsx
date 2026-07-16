@@ -97,20 +97,6 @@ export default function GameBoard() {
       <PlayerBar players={gameState.players} currentPlayerId={gameState.currentPlayerId} myPlayerId={myPlayerId!} direction={gameState.direction} />
 
       <AnimatePresence>
-        {showTurnBanner && (
-          <motion.div
-            initial={{ opacity: 0, y: -30, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            className="mx-4 mt-3 px-4 py-2.5 rounded-xl bg-gradient-to-r from-uno-red/20 to-uno-red/5 border border-uno-red/30 text-center"
-          >
-            <span className="text-sm font-black text-uno-red tracking-wider">SEU TURNO</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
         {room?.stackChain && (
           <motion.div
             initial={{ opacity: 0, y: -20, height: 0 }}
@@ -200,19 +186,24 @@ export default function GameBoard() {
           hasDrawn={hasDrawn} drawnPlayable={gameState.drawnCardPlayable} calledUno={gameState.calledUno}
           handSize={gameState.hand.length} isMyTurn={isMyTurn}
           onPlay={handlePlay} onDraw={handleDraw} onPlayDrawn={handlePlayDrawn} onPass={handlePass} onUno={handleUno} />
+
+        <AnimatePresence>
+          {showTurnBanner && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ type: "spring", stiffness: 500, damping: 25 }}
+              className="text-center"
+            >
+              <span className="text-[11px] font-bold text-uno-yellow tracking-[0.2em] uppercase">◆ Seu Turno</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <CardHand cards={gameState.hand} selectedIndex={selectedIndex} onSelectCard={setSelectedIndex}
-        playableCards={playableCards} disabled={!isMyTurn} />
-
-      <div className="text-center text-xs text-text-muted pb-2">
-        Suas cartas: <span className="text-text-primary font-bold">{myCardCount}</span>
-        {hasDrawn && gameState.hand.length > 0 && (
-          <span className="ml-3 text-uno-yellow font-medium">
-            ◆ Carta comprada: última da mão
-          </span>
-        )}
-      </div>
+        playableCards={playableCards} disabled={!isMyTurn} cardCount={myCardCount} isDrawing={hasDrawn} />
 
       <ColorPicker />
       <GameResult />

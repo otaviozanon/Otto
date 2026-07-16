@@ -9,6 +9,8 @@ interface CardHandProps {
   onSelectCard: (index: number) => void;
   playableCards: boolean[];
   disabled: boolean;
+  cardCount: number;
+  isDrawing: boolean;
 }
 
 function cardKey(card: CardType, i: number): string {
@@ -17,10 +19,10 @@ function cardKey(card: CardType, i: number): string {
   return `${c}-${card.type}-${v}-${i}`;
 }
 
-const CardHand = memo(function CardHand({ cards, selectedIndex, onSelectCard, playableCards, disabled }: CardHandProps) {
+const CardHand = memo(function CardHand({ cards, selectedIndex, onSelectCard, playableCards, disabled, cardCount, isDrawing }: CardHandProps) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 p-4 pt-8 pb-6 bg-gradient-to-t from-surface via-surface/95 to-transparent z-20">
-      <div className="flex justify-center items-end gap-1 overflow-visible pb-2 min-h-[120px]">
+    <div className="fixed bottom-0 left-0 right-0 p-4 pt-8 pb-4 bg-gradient-to-t from-surface via-surface/98 to-transparent z-20">
+      <div className="flex justify-center items-end gap-1 overflow-visible pb-1 min-h-[120px]">
         {cards.map((card, i) => (
           <Card
             key={cardKey(card, i)}
@@ -32,6 +34,12 @@ const CardHand = memo(function CardHand({ cards, selectedIndex, onSelectCard, pl
             index={i}
           />
         ))}
+      </div>
+      <div className="text-center text-[10px] text-text-muted">
+        <span className="text-text-primary font-bold">{cardCount}</span> cartas
+        {isDrawing && cards.length > 0 && (
+          <span className="ml-2 text-uno-yellow font-medium">◆ comprada</span>
+        )}
       </div>
     </div>
   );
