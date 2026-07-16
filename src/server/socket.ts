@@ -208,6 +208,28 @@ export function setupSocket(io: SocketIOServer): void {
         return;
       }
       try {
+        const card = room.players[room.currentPlayerIndex].hand[cardIndex];
+        const isSkipOrReverse = card?.type === "skip" || card?.type === "reverse";
+        if (isSkipOrReverse && room.players.length === 2) {
+          clearRoomTimer(room.id);
+          let updated = playCard(room, playerId, cardIndex);
+          if (updated.status === "finished") {
+            setRoom(room.id, updated);
+            io.to(room.id).emit("game:end", { winner: toPublic(updated.winner!), ranking: updated.ranking });
+            roomTimers.delete(room.id);
+            return;
+          }
+          updated = resolveStack(updated);
+          setRoom(room.id, updated);
+          if (updated.status === "finished") {
+            io.to(room.id).emit("game:end", { winner: toPublic(updated.winner!), ranking: updated.ranking });
+            roomTimers.delete(room.id);
+            return;
+          }
+          startTurnTimer(io, updated, room.id);
+          sendYourState(io, updated);
+          return;
+        }
         handlePlay(io, socket, room, playerId, (r, pid) => playCard(r, pid, cardIndex));
       } catch (e: any) {
         socket.emit("error", { message: e.message });
