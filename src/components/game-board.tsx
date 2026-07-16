@@ -38,6 +38,9 @@ export default function GameBoard() {
       prevTurnRef.current = myPlayerId as string;
       return () => clearTimeout(t);
     }
+    if (gameState.currentPlayerId !== myPlayerId) {
+      setShowTurnBanner(false);
+    }
     prevTurnRef.current = gameState.currentPlayerId;
   }, [gameState?.currentPlayerId, myPlayerId]);
 

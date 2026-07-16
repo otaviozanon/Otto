@@ -201,7 +201,7 @@ export function setupSocket(io: SocketIOServer): void {
         socket.emit("error", { message: "Nao e seu turno" });
         return;
       }
-      if (requiresColorChoice(room.discardPile[room.discardPile.length - 1])) {
+      if (room.stackChain && requiresColorChoice(room.discardPile[room.discardPile.length - 1])) {
         socket.emit("error", { message: "Escolha uma cor primeiro" });
         return;
       }
@@ -220,7 +220,7 @@ export function setupSocket(io: SocketIOServer): void {
         socket.emit("error", { message: "Nao e seu turno" });
         return;
       }
-      if (requiresColorChoice(room.discardPile[room.discardPile.length - 1])) {
+      if (room.stackChain && requiresColorChoice(room.discardPile[room.discardPile.length - 1])) {
         socket.emit("error", { message: "Escolha uma cor primeiro" });
         return;
       }
@@ -248,7 +248,7 @@ export function setupSocket(io: SocketIOServer): void {
         socket.emit("error", { message: "Nao e seu turno" });
         return;
       }
-      if (requiresColorChoice(room.discardPile[room.discardPile.length - 1])) {
+      if (room.stackChain && requiresColorChoice(room.discardPile[room.discardPile.length - 1])) {
         socket.emit("error", { message: "Escolha uma cor primeiro" });
         return;
       }
@@ -267,7 +267,7 @@ export function setupSocket(io: SocketIOServer): void {
         socket.emit("error", { message: "Nao e seu turno" });
         return;
       }
-      if (requiresColorChoice(room.discardPile[room.discardPile.length - 1])) {
+      if (room.stackChain && requiresColorChoice(room.discardPile[room.discardPile.length - 1])) {
         socket.emit("error", { message: "Escolha uma cor primeiro" });
         return;
       }
