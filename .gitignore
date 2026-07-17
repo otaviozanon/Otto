@@ -4,6 +4,7 @@ dist/
 .superpowers/
 docs/
 docs/superpowers/
+nodemodules/
 test-output.txt
 *.tsbuildinfo
 *.log
