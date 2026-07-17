@@ -1,7 +1,9 @@
-.superpowers/
-docs/superpowers/
 node_modules/
 .next/
 dist/
+.superpowers/
+docs/
+docs/superpowers/
+test-output.txt
 *.tsbuildinfo
 *.log
