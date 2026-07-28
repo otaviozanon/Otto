@@ -268,8 +268,10 @@ export function setupSocket(io: SocketIOServer): void {
           socket.join(room.id);
           socket.emit("player:id", player.id);
           io.to(room.id).emit("room:state", updated);
-        } catch (e: any) {
-          socket.emit("error", { message: e.message });
+        } catch (e) {
+          const message =
+            e instanceof Error ? e.message : "Failed to join room";
+          socket.emit("error", { message });
         }
       },
     );
@@ -300,8 +302,9 @@ export function setupSocket(io: SocketIOServer): void {
         } as Room);
         startTurnTimer(io, started, room.id);
         sendYourState(io, started);
-      } catch (e: any) {
-        socket.emit("error", { message: e.message });
+      } catch (e) {
+        const message = e instanceof Error ? e.message : "Failed to start game";
+        socket.emit("error", { message });
       }
     });
 
@@ -357,8 +360,9 @@ export function setupSocket(io: SocketIOServer): void {
         handlePlay(io, socket, room, playerId, (r, pid) =>
           playCard(r, pid, cardIndex),
         );
-      } catch (e: any) {
-        socket.emit("error", { message: e.message });
+      } catch (e) {
+        const message = e instanceof Error ? e.message : "Failed to play card";
+        socket.emit("error", { message });
       }
     });
 
@@ -388,8 +392,9 @@ export function setupSocket(io: SocketIOServer): void {
         const updated = drawCard(room, playerId);
         setRoom(room.id, updated);
         sendYourState(io, updated);
-      } catch (e: any) {
-        socket.emit("error", { message: e.message });
+      } catch (e) {
+        const message = e instanceof Error ? e.message : "Failed to draw card";
+        socket.emit("error", { message });
       }
     });
 
@@ -410,8 +415,10 @@ export function setupSocket(io: SocketIOServer): void {
       }
       try {
         handlePlay(io, socket, room, playerId, playDrawnCard);
-      } catch (e: any) {
-        socket.emit("error", { message: e.message });
+      } catch (e) {
+        const message =
+          e instanceof Error ? e.message : "Failed to play drawn card";
+        socket.emit("error", { message });
       }
     });
 

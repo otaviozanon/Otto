@@ -1,6 +1,19 @@
 import { describe, it, expect } from "vitest";
-import { startGame, playCard, drawCard, passTurn, callUno, chooseColor, checkWin } from "@/game-engine/game";
-import { createRoom, joinRoom, removePlayer, setPlayerDisconnected } from "@/game-engine/room";
+import {
+  startGame,
+  playCard,
+  drawCard,
+  passTurn,
+  callUno,
+  chooseColor,
+  checkWin,
+} from "@/game-engine/game";
+import {
+  createRoom,
+  joinRoom,
+  removePlayer,
+  setPlayerDisconnected,
+} from "@/game-engine/room";
 import { resolveStack, advanceAfterStack } from "@/game-engine/stacking";
 import { Card, Room } from "@/game-engine/types";
 
@@ -9,10 +22,18 @@ describe("Wild color choice flow", () => {
     let room = joinRoom(joinRoom(createRoom("P0"), "P1"), "P2");
     let s = startGame(room);
     s = {
-      ...s, currentColor: "red", currentPlayerIndex: 0,
+      ...s,
+      currentColor: "red",
+      currentPlayerIndex: 0,
       discardPile: [{ type: "number", color: "red", value: 5 } as Card],
       players: [
-        { ...s.players[0], hand: [{ type: "wild" } as Card, { type: "number", color: "red", value: 1 } as Card] },
+        {
+          ...s.players[0],
+          hand: [
+            { type: "wild" } as Card,
+            { type: "number", color: "red", value: 1 } as Card,
+          ],
+        },
         s.players[1],
         s.players[2],
       ],
@@ -34,10 +55,18 @@ describe("Wild color choice flow", () => {
     let room = joinRoom(joinRoom(createRoom("P0"), "P1"), "P2");
     let s = startGame(room);
     s = {
-      ...s, currentColor: "red", currentPlayerIndex: 0,
+      ...s,
+      currentColor: "red",
+      currentPlayerIndex: 0,
       discardPile: [{ type: "number", color: "red", value: 5 } as Card],
       players: [
-        { ...s.players[0], hand: [{ type: "wild" } as Card, { type: "number", color: "red", value: 1 } as Card] },
+        {
+          ...s.players[0],
+          hand: [
+            { type: "wild" } as Card,
+            { type: "number", color: "red", value: 1 } as Card,
+          ],
+        },
         s.players[1],
         s.players[2],
       ],
@@ -52,12 +81,32 @@ describe("Wild stacking: wild on wild", () => {
     let room = joinRoom(joinRoom(joinRoom(createRoom("P0"), "P1"), "P2"), "P3");
     let s = startGame(room);
     s = {
-      ...s, currentColor: "red", currentPlayerIndex: 0,
+      ...s,
+      currentColor: "red",
+      currentPlayerIndex: 0,
       discardPile: [{ type: "number", color: "red", value: 5 } as Card],
       players: [
-        { ...s.players[0], hand: [{ type: "wild" } as Card, { type: "number", color: "red", value: 1 } as Card] },
-        { ...s.players[1], hand: [{ type: "wild" } as Card, { type: "number", color: "red", value: 1 } as Card] },
-        { ...s.players[2], hand: [{ type: "wild" } as Card, { type: "number", color: "red", value: 1 } as Card] },
+        {
+          ...s.players[0],
+          hand: [
+            { type: "wild" } as Card,
+            { type: "number", color: "red", value: 1 } as Card,
+          ],
+        },
+        {
+          ...s.players[1],
+          hand: [
+            { type: "wild" } as Card,
+            { type: "number", color: "red", value: 1 } as Card,
+          ],
+        },
+        {
+          ...s.players[2],
+          hand: [
+            { type: "wild" } as Card,
+            { type: "number", color: "red", value: 1 } as Card,
+          ],
+        },
         s.players[3],
       ],
     };
@@ -79,11 +128,26 @@ describe("Reverse stacking: reverse on reverse", () => {
     let room = joinRoom(joinRoom(createRoom("P0"), "P1"), "P2");
     let s = startGame(room);
     s = {
-      ...s, currentColor: "red", currentPlayerIndex: 0, direction: 1,
+      ...s,
+      currentColor: "red",
+      currentPlayerIndex: 0,
+      direction: 1,
       discardPile: [{ type: "number", color: "red", value: 5 } as Card],
       players: [
-        { ...s.players[0], hand: [{ type: "reverse", color: "red" } as Card, { type: "number", color: "red", value: 1 } as Card] },
-        { ...s.players[1], hand: [{ type: "reverse", color: "blue" } as Card, { type: "number", color: "red", value: 1 } as Card] },
+        {
+          ...s.players[0],
+          hand: [
+            { type: "reverse", color: "red" } as Card,
+            { type: "number", color: "red", value: 1 } as Card,
+          ],
+        },
+        {
+          ...s.players[1],
+          hand: [
+            { type: "reverse", color: "blue" } as Card,
+            { type: "number", color: "red", value: 1 } as Card,
+          ],
+        },
         s.players[2],
       ],
     };
@@ -105,12 +169,27 @@ describe("Skip chain: normal play allowed for non-penalty chains", () => {
     let room = joinRoom(joinRoom(joinRoom(createRoom("P0"), "P1"), "P2"), "P3");
     let s = startGame(room);
     s = {
-      ...s, currentColor: "red", currentPlayerIndex: 0,
-      drawPile: Array.from({ length: 5 }, () => ({ type: "number" as const, color: "red" as const, value: 1 })),
+      ...s,
+      currentColor: "red",
+      currentPlayerIndex: 0,
+      drawPile: Array.from({ length: 5 }, () => ({
+        type: "number" as const,
+        color: "red" as const,
+        value: 1,
+      })),
       discardPile: [{ type: "number", color: "red", value: 5 } as Card],
       players: [
-        { ...s.players[0], hand: [{ type: "skip", color: "red" } as Card, { type: "number", color: "red", value: 1 } as Card] },
-        { ...s.players[1], hand: [{ type: "number", color: "red", value: 3 } as Card] },
+        {
+          ...s.players[0],
+          hand: [
+            { type: "skip", color: "red" } as Card,
+            { type: "number", color: "red", value: 1 } as Card,
+          ],
+        },
+        {
+          ...s.players[1],
+          hand: [{ type: "number", color: "red", value: 3 } as Card],
+        },
         s.players[2],
         s.players[3],
       ],
@@ -154,27 +233,41 @@ describe("Full game with 4 players", () => {
     let s = startGame(room);
 
     s = {
-      ...s, currentColor: "red", currentPlayerIndex: 0,
-      drawPile: Array.from({ length: 100 }, () => ({ type: "number" as const, color: "red" as const, value: 1 })),
+      ...s,
+      currentColor: "red",
+      currentPlayerIndex: 0,
+      drawPile: Array.from({ length: 100 }, () => ({
+        type: "number" as const,
+        color: "red" as const,
+        value: 1,
+      })),
       discardPile: [{ type: "number", color: "red", value: 5 } as Card],
       players: [
-        { ...s.players[0], hand: [
-          { type: "draw2", color: "red" } as Card,
-          { type: "skip", color: "red" } as Card,
-          { type: "reverse", color: "red" } as Card,
-          { type: "wild" } as Card,
-          { type: "number", color: "red", value: 3 } as Card,
-        ]},
-        { ...s.players[1], hand: [
-          { type: "draw2", color: "blue" } as Card,
-          { type: "number", color: "red", value: 7 } as Card,
-        ]},
-        { ...s.players[2], hand: [
-          { type: "number", color: "red", value: 9 } as Card,
-        ]},
-        { ...s.players[3], hand: [
-          { type: "number", color: "red", value: 1 } as Card,
-        ]},
+        {
+          ...s.players[0],
+          hand: [
+            { type: "draw2", color: "red" } as Card,
+            { type: "skip", color: "red" } as Card,
+            { type: "reverse", color: "red" } as Card,
+            { type: "wild" } as Card,
+            { type: "number", color: "red", value: 3 } as Card,
+          ],
+        },
+        {
+          ...s.players[1],
+          hand: [
+            { type: "draw2", color: "blue" } as Card,
+            { type: "number", color: "red", value: 7 } as Card,
+          ],
+        },
+        {
+          ...s.players[2],
+          hand: [{ type: "number", color: "red", value: 9 } as Card],
+        },
+        {
+          ...s.players[3],
+          hand: [{ type: "number", color: "red", value: 1 } as Card],
+        },
       ],
     };
 
@@ -195,11 +288,16 @@ describe("Drawn card edge cases", () => {
     let room = joinRoom(createRoom("P0"), "P1");
     let s = startGame(room);
     s = {
-      ...s, currentColor: "red", currentPlayerIndex: 0,
+      ...s,
+      currentColor: "red",
+      currentPlayerIndex: 0,
       drawPile: [{ type: "number", color: "blue", value: 5 } as Card],
       discardPile: [{ type: "number", color: "red", value: 9 } as Card],
       players: [
-        { ...s.players[0], hand: [{ type: "number", color: "blue", value: 3 } as Card] },
+        {
+          ...s.players[0],
+          hand: [{ type: "number", color: "blue", value: 3 } as Card],
+        },
         s.players[1],
       ],
     };
@@ -215,11 +313,20 @@ describe("Drawn card edge cases", () => {
     let s = startGame(room);
     const pId = s.players[0].id;
     s = {
-      ...s, currentColor: "red", currentPlayerIndex: 0,
-      drawPile: Array.from({ length: 10 }, () => ({ type: "number" as const, color: "red" as const, value: 1 })),
+      ...s,
+      currentColor: "red",
+      currentPlayerIndex: 0,
+      drawPile: Array.from({ length: 10 }, () => ({
+        type: "number" as const,
+        color: "red" as const,
+        value: 1,
+      })),
       discardPile: [{ type: "number", color: "red", value: 9 } as Card],
       players: [
-        { ...s.players[0], hand: [{ type: "number", color: "blue", value: 3 } as Card] },
+        {
+          ...s.players[0],
+          hand: [{ type: "number", color: "blue", value: 3 } as Card],
+        },
         s.players[1],
       ],
       calledUno: { [pId]: true },
@@ -262,10 +369,15 @@ describe("UNO edge cases", () => {
     let s = startGame(room);
     const pId = s.players[0].id;
     s = {
-      ...s, currentColor: "red", currentPlayerIndex: 0,
+      ...s,
+      currentColor: "red",
+      currentPlayerIndex: 0,
       discardPile: [{ type: "number", color: "red", value: 9 } as Card],
       players: [
-        { ...s.players[0], hand: [{ type: "number", color: "red", value: 3 } as Card] },
+        {
+          ...s.players[0],
+          hand: [{ type: "number", color: "red", value: 3 } as Card],
+        },
         s.players[1],
       ],
     };
@@ -309,7 +421,9 @@ describe("Deck integrity", () => {
   it("no duplicate of single zero per color", () => {
     const deck = createDeck();
     const zeros = deck.filter((c) => c.type === "number" && c.value === 0);
-    const colors = new Set(zeros.map((c: any) => c.color));
+    const colors = new Set(
+      zeros.map((c) => (c.type === "number" ? c.color : "red")),
+    );
     expect(colors.size).toBe(4);
   });
 });
@@ -325,6 +439,8 @@ describe("playCard rejects invalid cards with stacking chain", () => {
   it("rejects card for non-existent player", () => {
     let room = joinRoom(createRoom("P0"), "P1");
     let s = startGame(room);
-    expect(() => playCard(s, "nonexistent", 0)).toThrow("Jogador nao encontrado");
+    expect(() => playCard(s, "nonexistent", 0)).toThrow(
+      "Jogador nao encontrado",
+    );
   });
 });

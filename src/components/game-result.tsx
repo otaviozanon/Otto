@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useGameStore } from "@/lib/store";
 import { getSocket } from "@/lib/socket";
 import { Crown, Medal, RotateCcw } from "lucide-react";
+import { useLanguage } from "@/lib/i18n/useLanguage";
 
 const medals = ["text-yellow-400", "text-gray-300", "text-amber-600"];
 
@@ -10,6 +11,7 @@ export default function GameResult() {
   const result = useGameStore((s) => s.gameResult);
   const room = useGameStore((s) => s.room);
   const myPlayerId = useGameStore((s) => s.myPlayerId);
+  const { t } = useLanguage();
 
   const connectedCount = room?.players.filter((p) => p.connected).length ?? 0;
   const voteCount = room?.playAgainVotes?.length ?? 0;
@@ -57,7 +59,7 @@ export default function GameResult() {
                 transition={{ delay: 0.7 }}
                 className="text-2xl font-black text-text-primary"
               >
-                {result.winner.name} venceu!
+                {result.winner.name} {t.result.winner}
               </motion.h2>
             </div>
 
@@ -82,7 +84,7 @@ export default function GameResult() {
                     {p.name}
                   </span>
                   <span className="text-sm text-text-muted">
-                    {p.cardCount} CARTAS
+                    {p.cardCount} {t.result.cards}
                   </span>
                 </motion.div>
               ))}
@@ -106,8 +108,8 @@ export default function GameResult() {
             >
               <RotateCcw size={18} />
               {hasVoted
-                ? `Aguardando (${voteCount}/${connectedCount})`
-                : "Jogar Novamente"}
+                ? `${t.result.waiting} (${voteCount}/${connectedCount})`
+                : t.result.playAgain}
             </motion.button>
 
             {room && room.playAgainVotes && room.playAgainVotes.length > 0 && (
