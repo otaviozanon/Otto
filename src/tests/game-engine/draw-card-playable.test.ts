@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { startGame, drawCard, playCard } from "@/game-engine/game";
+import { startGame, drawCard, playCard, callUno } from "@/game-engine/game";
 import { createRoom, joinRoom } from "@/game-engine/room";
 import { Card } from "@/game-engine/types";
 
@@ -123,6 +123,7 @@ describe("Draw card with playable cards in hand", () => {
 
     // Draw
     game = drawCard(game, p0Id);
+    game = callUno(game, p0Id);
     expect(game.players[0].hand.length).toBe(2);
 
     // Play drawn card (last index)
@@ -169,10 +170,10 @@ describe("Draw card with playable cards in hand", () => {
 
     // P0 draws skip
     game = drawCard(game, p0Id);
-    expect(game.players[0].hand.length).toBe(2);
+    expect(game.players[0].hand.length).toBe(3);
 
     // P0 plays skip (in 2-player, turn comes back to P0)
-    game = playCard(game, p0Id, 1); // Skip is at index 1
+    game = playCard(game, p0Id, 2); // Skip is at index 2
 
     // After skip in 2-player, turn stays with P0 (skip acts like reverse)
     // stackChain should be created

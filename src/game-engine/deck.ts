@@ -51,7 +51,11 @@ export function reshuffleDiscard(drawPile: Card[], discardPile: Card[]): { drawP
     return { drawPile: shuffle(toShuffle), discardPile: [discardPile[discardPile.length - 1]] };
   }
   const freshDeck = shuffle(createDeck());
-  const topCard = discardPile.length > 0 ? discardPile[discardPile.length - 1] : freshDeck[0];
+  let topCard = discardPile.length > 0 ? discardPile[discardPile.length - 1] : freshDeck[0];
+  while (topCard.type === "wild" || topCard.type === "wild4") {
+    const result = draw(freshDeck);
+    topCard = result.card;
+  }
   return { drawPile: freshDeck, discardPile: [topCard] };
 }
 

@@ -10,13 +10,19 @@ const socketToPlayer = new Map<string, { roomId: string; playerId: string }>();
 const playerToSocket = new Map<string, string>();
 
 export function mapSocketToPlayer(socketId: string, roomId: string, playerId: string): void {
+  const existing = playerToSocket.get(playerId);
+  if (existing) socketToPlayer.delete(existing);
   socketToPlayer.set(socketId, { roomId, playerId });
   playerToSocket.set(playerId, socketId);
 }
 
 export function removeSocketMapping(socketId: string): { roomId: string; playerId: string } | undefined {
   const mapping = socketToPlayer.get(socketId);
-  if (mapping) { socketToPlayer.delete(socketId); playerToSocket.delete(mapping.playerId); }
+  if (mapping) {
+    socketToPlayer.delete(socketId);
+    const stillMapped = [...socketToPlayer.values()].some((m) => m.playerId === mapping.playerId);
+    if (!stillMapped) playerToSocket.delete(mapping.playerId);
+  }
   return mapping;
 }
 

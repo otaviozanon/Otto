@@ -57,12 +57,6 @@ export default function GameBoard() {
   );
 
   useEffect(() => {
-    return () => {
-      if (bannerTimerRef.current) clearTimeout(bannerTimerRef.current);
-    };
-  }, []);
-
-  useEffect(() => {
     if (!gameState) return;
     setTimer(gameState.turnTimer);
     const int = setInterval(

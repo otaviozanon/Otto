@@ -14,8 +14,13 @@ app.prepare().then(() => {
     handle(req, res, parsedUrl);
   });
 
+  const allowedOrigin = process.env.NEXT_PUBLIC_URL || "*";
+
   const io = new SocketIOServer(server, {
-    cors: { origin: "*", methods: ["GET", "POST"] },
+    cors: {
+      origin: dev ? "*" : allowedOrigin,
+      methods: ["GET", "POST"],
+    },
   });
 
   setupSocket(io);
@@ -24,4 +29,23 @@ app.prepare().then(() => {
   server.listen(port, () => {
     console.log(`> Ready on http://localhost:${port}`);
   });
+
+  server.on("error", (err: NodeJS.ErrnoException) => {
+    if (err.code === "EADDRINUSE") {
+      console.error(`Port ${port} is already in use`);
+      process.exit(1);
+    }
+    throw err;
+  });
+
+  function gracefulShutdown(signal: string) {
+    console.log(`\n> Received ${signal}, shutting down...`);
+    io.close(() => {
+      server.close(() => process.exit(0));
+    });
+    setTimeout(() => process.exit(1), 10000);
+  }
+
+  process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
+  process.on("SIGINT", () => gracefulShutdown("SIGINT"));
 });

@@ -14,8 +14,8 @@ interface CardHandProps {
 }
 
 function cardKey(card: CardType, i: number): string {
-  const v = card.type === "number" ? (card as any).value : "";
-  const c = "color" in card ? (card as any).color : "wild";
+  const v = card.type === "number" ? card.value : "";
+  const c = "color" in card ? card.color : "wild";
   return `${c}-${card.type}-${v}-${i}`;
 }
 

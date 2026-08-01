@@ -1,7 +1,6 @@
 "use client";
 import { motion, AnimatePresence } from "motion/react";
 import { Play, Download, SkipForward, Megaphone } from "lucide-react";
-import { animation, touchTarget, spacing } from "@/styles/design-tokens";
 
 interface ActionButtonsProps {
   canPlay: boolean;

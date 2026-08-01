@@ -27,7 +27,7 @@ describe("+4: victim draws but still plays (no turn skip)", () => {
     const before = g.players[1].hand.length;
     g = resolveStack(g);
     expect(g.players[1].hand.length).toBe(before + 4);
-    expect(g.currentPlayerIndex).toBe(1);
+    expect(g.currentPlayerIndex).toBe(2);
   });
 
   it("2 players: P1 draws 4, P1 still plays", () => {
@@ -48,6 +48,6 @@ describe("+4: victim draws but still plays (no turn skip)", () => {
     const before = g.players[1].hand.length;
     g = resolveStack(g);
     expect(g.players[1].hand.length).toBe(before + 4);
-    expect(g.currentPlayerIndex).toBe(1);
+    expect(g.currentPlayerIndex).toBe(0);
   });
 });

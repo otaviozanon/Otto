@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import RootLayoutClient from "./root-layout-client";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -10,7 +11,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className="antialiased">
-      <body className="bg-surface text-text-primary min-h-dvh">{children}</body>
+      <body className="bg-surface text-text-primary min-h-dvh">
+        <RootLayoutClient>{children}</RootLayoutClient>
+      </body>
     </html>
   );
 }

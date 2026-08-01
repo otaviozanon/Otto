@@ -8,7 +8,7 @@ function generateCode(): string {
 }
 
 export function createRoom(playerName: string): Room {
-  const player: Player = { id: Math.random().toString(36).slice(2, 10), name: playerName, hand: [], connected: true };
+  const player: Player = { id: crypto.randomUUID(), name: playerName, hand: [], connected: true };
   return {
     id: generateCode(), host: player.id, players: [player], status: "lobby",
     drawPile: [], discardPile: [], currentColor: "red", direction: 1,
@@ -20,7 +20,7 @@ export function createRoom(playerName: string): Room {
 export function joinRoom(room: Room, playerName: string): Room {
   if (room.status !== "lobby") throw new Error("Jogo ja iniciado");
   if (room.players.length >= 15) throw new Error("Sala cheia (maximo 15 jogadores)");
-  const player: Player = { id: Math.random().toString(36).slice(2, 10), name: playerName, hand: [], connected: true };
+  const player: Player = { id: crypto.randomUUID(), name: playerName, hand: [], connected: true };
   return { ...room, players: [...room.players, player] };
 }
 

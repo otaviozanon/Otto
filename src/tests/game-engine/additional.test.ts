@@ -332,6 +332,7 @@ describe("Drawn card edge cases", () => {
       calledUno: { [pId]: true },
     };
     s = drawCard(s, pId);
+    s = callUno(s, pId);
     expect(s.players[0].hand).toHaveLength(2);
 
     s = playCard(s, pId, 1);

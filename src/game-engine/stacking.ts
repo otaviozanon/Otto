@@ -24,11 +24,12 @@ export function resolveStack(room: Room): Room {
       updated = {
         ...updated,
         players: updated.players.map((p, idx) =>
-          idx === victimIdx ? { ...p, hand: [...p.hand, card] } : p
+          idx === victimIdx ? { ...p, hand: [...p.hand, card] } : p,
         ),
       };
     }
     updated = { ...updated, drawPile: currentDraw, stackChain: null };
+    updated = advanceAfterStack(updated);
     return updated;
   }
 

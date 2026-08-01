@@ -176,8 +176,6 @@ export function drawCard(room: Room, playerId: string): Room {
 
   const newHand = [...room.players[pIdx].hand, card];
 
-  // Sempre reseta o UNO após comprar para permitir chamar novamente
-  // (jogador pode ter tido UNO antes e agora tem 2 cartas novamente)
   return {
     ...room,
     players: room.players.map((p, i) =>
@@ -241,7 +239,13 @@ export function checkWin(room: Room): Room {
 }
 
 export function processTurnTimeout(room: Room, playerId: string): Room {
-  if (room.stackChain) return resolveStack(room);
+  if (room.stackChain) {
+    const resolved = resolveStack(room);
+    return {
+      ...resolved,
+      calledUno: { ...resolved.calledUno, [playerId]: false },
+    };
+  }
   const hasDrawn = room.lastDrawnCard[playerId] != null;
   let updated = room;
   if (!hasDrawn) updated = drawCard(updated, playerId);
