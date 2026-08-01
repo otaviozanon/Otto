@@ -57,6 +57,12 @@ Cartas do mesmo tipo podem ser empilhadas:
 
 **15 segundos** no primeiro movimento, **10 segundos** para jogadas extras do mesmo jogador.
 
+## 📄 License
+
+GPL-3.0. See [LICENSE](/LICENSE).
+
+---
+
 <p align="center">
   Feito com ♥️
 </p>
