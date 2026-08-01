@@ -11,4 +11,4 @@ services:
       - key: PORT
         value: 3000
       - key: NEXT_PUBLIC_WS_URL
-        value: https://otto.onrender.com
+        value: https://ottogame.onrender.com
