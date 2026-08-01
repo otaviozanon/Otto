@@ -7,11 +7,11 @@
     "node": ">=18"
   },
   "scripts": {
-    "dev": "tsx server.mts",
+    "dev": "bun run --bun server.mts",
     "build": "next build --turbo",
-    "start": "NODE_ENV=production tsx server.mts",
-    "test": "tsc --noEmit && vitest run",
-    "test:watch": "vitest",
+    "start": "bun run server.mts",
+    "test": "bun run tsc --noEmit && bun run vitest",
+    "test:watch": "bun run vitest",
     "lint": "next lint"
   },
   "dependencies": {
@@ -35,7 +35,6 @@
     "jsdom": "^29.1.1",
     "postcss": "^8.5.17",
     "tailwindcss": "^4.3.2",
-    "tsx": "^4.23.0",
     "typescript": "5.8.2",
     "vitest": "^4.1.10"
   }
