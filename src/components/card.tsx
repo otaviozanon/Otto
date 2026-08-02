@@ -40,7 +40,7 @@ const UnoCard = memo(function UnoCard({ card, onClick, selected, playable, size 
   const colors = isWild ? { bg: "from-gray-900 to-gray-950", ring: "ring-gray-600/50", oval: "bg-gray-800" } : COLOR_MAP[card.color!] || COLOR_MAP.red;
 
   const sizeClasses = {
-    sm:  "w-11 h-16 text-[10px] rounded-[6px]",
+    sm:  "w-10 h-14 text-[8px] rounded-[5px]",
     md:  "w-[70px] h-[98px] text-sm rounded-[9px]",
     lg:  "w-[84px] h-[116px] text-base rounded-[12px]",
   };

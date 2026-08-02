@@ -16,5 +16,5 @@ export default function GamePage() {
   useEffect(() => { if (!room) router.push("/"); }, [room, router]);
   if (!room) return null;
 
-  return <main className="min-h-screen bg-surface"><GameBoard /><RulesModal /></main>;
+  return <main className="min-h-dvh bg-surface"><GameBoard /><RulesModal /></main>;
 }
